@@ -1,473 +1,298 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+  <title>NEDR | Student Portal</title>
+  <meta name="description"
+        content="NEDR Student Academic Repository Portal">
 
-    <title>NODE | National Online Document & Education</title>
-
-    <meta
-        name="description"
-        content="NODE - Digital education repository and academic document management platform."
-    >
-
-    <link rel="stylesheet" href="style.css">
-
-    <script
-        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
-        defer
-    ></script>
-
-    <script src="supabase.js" defer></script>
-    <script src="script.js" defer></script>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<!-- ================= HEADER ================= -->
+<header class="navbar">
 
-<header class="site-header">
+  <a href="index.html" class="logo">
+    <span class="logo-box">N</span>
+    <span>NEDR</span>
+  </a>
 
-    <div class="container header-inner">
+  <nav id="navMenu">
 
-        <a href="index.html" class="logo">
-            <span class="logo-mark">N</span>
+    <a href="#home">Home</a>
+    <a href="#services">Services</a>
+    <a href="#process">Process</a>
+    <a href="#about">About</a>
 
-            <span class="logo-text">
-                NODE
-                <small>
-                    National Online Document & Education
-                </small>
-            </span>
-        </a>
+    <a href="login.html" class="login-btn">
+      Student Login
+    </a>
 
+    <a href="register.html" class="register-btn">
+      Register
+    </a>
 
-        <nav class="main-nav">
+  </nav>
 
-            <a href="index.html">
-                Home
-            </a>
-
-            <a href="#about">
-                About
-            </a>
-
-            <a href="#services">
-                Services
-            </a>
-
-            <a href="login.html" class="nav-login">
-                Login
-            </a>
-
-        </nav>
-
-    </div>
+  <button class="menu-toggle" id="menuToggle">
+    ☰
+  </button>
 
 </header>
 
 
-<!-- ================= HERO ================= -->
-
 <main>
 
-<section class="hero">
+<section class="hero" id="home">
 
-    <div class="container hero-grid">
+  <div class="hero-content">
 
-        <div class="hero-content">
+    <div class="eyebrow">
+      NATIONAL EDUCATION DIGITAL REPOSITORY
+    </div>
 
-            <span class="eyebrow">
-                DIGITAL EDUCATION REPOSITORY
-            </span>
+    <h1>
+      Secure Academic Records.
+      <span>Simple Student Access.</span>
+    </h1>
 
-            <h1>
-                Securely managing
-                <span>education records</span>
-                and academic outputs.
-            </h1>
+    <p>
+      Register, complete your academic profile, submit your
+      project and manage your clearance workflow from one
+      secure student portal.
+    </p>
 
-            <p>
-                NODE provides students, lecturers and
-                institutions with a secure digital platform
-                for managing academic information,
-                documents and educational records.
-            </p>
+    <div class="hero-buttons">
 
-            <div class="hero-buttons">
+      <a href="register.html" class="primary-btn">
+        Start Registration
+      </a>
 
-                <a
-                    href="register.html"
-                    class="btn btn-primary"
-                >
-                    Register
-                </a>
-
-                <a
-                    href="login.html"
-                    class="btn btn-secondary"
-                >
-                    Login
-                </a>
-
-            </div>
-
-        </div>
-
-
-        <div class="login-card">
-
-            <div class="card-header">
-
-                <h2>
-                    NODE Login
-                </h2>
-
-                <p>
-                    Access your account
-                </p>
-
-            </div>
-
-
-            <form id="loginForm">
-
-                <div class="form-group">
-
-                    <label for="loginEmail">
-                        Email address
-                    </label>
-
-                    <input
-                        type="email"
-                        id="loginEmail"
-                        placeholder="Email address"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="loginPassword">
-                        Password
-                    </label>
-
-                    <input
-                        type="password"
-                        id="loginPassword"
-                        placeholder="Password"
-                        required
-                    >
-
-                </div>
-
-
-                <button
-                    type="submit"
-                    class="btn btn-primary full-width"
-                >
-                    Sign in
-                </button>
-
-
-                <div id="message" class="message"></div>
-
-
-                <div class="login-links">
-
-                    <a href="register.html">
-                        New user? Register
-                    </a>
-
-                    <a href="forgot-password.html">
-                        Forgot password?
-                    </a>
-
-                </div>
-
-            </form>
-
-        </div>
+      <a href="login.html" class="secondary-btn">
+        Access Portal
+      </a>
 
     </div>
+
+  </div>
+
+
+  <div class="portal-card">
+
+    <div class="portal-header">
+      <strong>Student Portal</strong>
+      <span class="online">
+        ● Online
+      </span>
+    </div>
+
+    <div class="portal-item">
+      <span>Registration</span>
+      <strong>₦2,500</strong>
+    </div>
+
+    <div class="portal-item">
+      <span>Project Upload</span>
+      <strong>₦4,850</strong>
+    </div>
+
+    <div class="progress">
+      <span></span>
+    </div>
+
+    <small>
+      Secure academic workflow
+    </small>
+
+  </div>
 
 </section>
 
 
-<!-- ================= ABOUT ================= -->
+<section class="section" id="services">
 
-<section id="about" class="section">
+  <div class="section-heading">
 
-    <div class="container">
+    <div class="eyebrow">
+      SERVICES
+    </div>
 
-        <div class="section-heading">
+    <h2>
+      Everything in one portal
+    </h2>
 
-            <span class="eyebrow">
-                ABOUT NODE
-            </span>
+  </div>
 
-            <h2>
-                A digital platform for education records
-            </h2>
 
-            <p>
-                NODE is designed to provide a centralized
-                digital environment for students,
-                lecturers and institutions to manage
-                academic information and educational
-                outputs.
-            </p>
+  <div class="cards">
 
-        </div>
+    <div class="card">
+
+      <div class="card-number">
+        01
+      </div>
+
+      <h3>
+        Student Enrolment
+      </h3>
+
+      <p>
+        Create an account and maintain your
+        personal and academic information.
+      </p>
 
     </div>
+
+
+    <div class="card">
+
+      <div class="card-number">
+        02
+      </div>
+
+      <h3>
+        Project Submission
+      </h3>
+
+      <p>
+        Pay the project upload fee, submit your
+        project and track its status.
+      </p>
+
+    </div>
+
+
+    <div class="card">
+
+      <div class="card-number">
+        03
+      </div>
+
+      <h3>
+        Clearance
+      </h3>
+
+      <p>
+        Receive your clearance number and access
+        your printable clearance slip.
+      </p>
+
+    </div>
+
+  </div>
 
 </section>
 
 
-<!-- ================= SERVICES ================= -->
+<section class="section dark-section" id="process">
 
-<section id="services" class="section section-light">
+  <div class="section-heading">
 
-    <div class="container">
+    <div class="eyebrow">
+      WORKFLOW
+    </div>
 
-        <div class="section-heading">
+    <h2>
+      Four simple stages
+    </h2>
 
-            <span class="eyebrow">
-                NODE SERVICES
-            </span>
-
-            <h2>
-                Digital education services
-            </h2>
-
-        </div>
+  </div>
 
 
-        <div class="services-grid">
+  <div class="steps">
 
-            <div class="service-card">
+    <div class="step">
 
-                <div class="service-icon">
-                    01
-                </div>
+      <strong>01</strong>
 
-                <h3>
-                    Student Registration
-                </h3>
-
-                <p>
-                    Create and manage your NODE
-                    student profile and academic
-                    information.
-                </p>
-
-            </div>
-
-
-            <div class="service-card">
-
-                <div class="service-icon">
-                    02
-                </div>
-
-                <h3>
-                    Academic Submission
-                </h3>
-
-                <p>
-                    Submit projects, theses,
-                    dissertations and other
-                    academic outputs digitally.
-                </p>
-
-            </div>
-
-
-            <div class="service-card">
-
-                <div class="service-icon">
-                    03
-                </div>
-
-                <h3>
-                    Document Management
-                </h3>
-
-                <p>
-                    Securely upload and manage
-                    academic and identification
-                    documents.
-                </p>
-
-            </div>
-
-
-            <div class="service-card">
-
-                <div class="service-icon">
-                    04
-                </div>
-
-                <h3>
-                    Payment & Receipts
-                </h3>
-
-                <p>
-                    Manage applicable submission
-                    payments and access your
-                    payment records and receipts.
-                </p>
-
-            </div>
-
-        </div>
+      <span>
+        Register & pay ₦2,500
+      </span>
 
     </div>
+
+
+    <div class="step">
+
+      <strong>02</strong>
+
+      <span>
+        Complete student profile
+      </span>
+
+    </div>
+
+
+    <div class="step">
+
+      <strong>03</strong>
+
+      <span>
+        Pay ₦4,850 & upload project
+      </span>
+
+    </div>
+
+
+    <div class="step">
+
+      <strong>04</strong>
+
+      <span>
+        Clearance number & slip
+      </span>
+
+    </div>
+
+  </div>
 
 </section>
 
 
-<!-- ================= QUICK MENU ================= -->
+<section class="section about" id="about">
 
-<section class="quick-section">
+  <div>
 
-    <div class="container">
-
-        <div class="section-heading">
-
-            <span class="eyebrow">
-                QUICK MENU
-            </span>
-
-            <h2>
-                NODE resources
-            </h2>
-
-        </div>
-
-
-        <div class="quick-grid">
-
-            <a href="#" class="quick-item">
-                Student Registration
-            </a>
-
-            <a href="#" class="quick-item">
-                Student / Lecturer Access
-            </a>
-
-            <a href="#" class="quick-item">
-                Academic Submission
-            </a>
-
-            <a href="#" class="quick-item">
-                Payment & Receipts
-            </a>
-
-            <a href="#" class="quick-item">
-                Document Verification
-            </a>
-
-            <a href="#" class="quick-item">
-                Contact & Support
-            </a>
-
-        </div>
-
+    <div class="eyebrow">
+      ABOUT
     </div>
+
+    <h2>
+      A complete academic portal
+      built for students.
+    </h2>
+
+    <p>
+      The portal provides a structured workflow for
+      student registration, academic information,
+      project submission, payment tracking and
+      clearance management.
+    </p>
+
+  </div>
 
 </section>
-
-
-<!-- ================= FOOTER ================= -->
-
-<footer class="site-footer">
-
-    <div class="container footer-grid">
-
-        <div>
-
-            <div class="footer-logo">
-                NODE
-            </div>
-
-            <p>
-                Digital education repository and
-                academic document management.
-            </p>
-
-        </div>
-
-
-        <div>
-
-            <h4>
-                QUICK LINKS
-            </h4>
-
-            <a href="index.html">
-                Home
-            </a>
-
-            <a href="#about">
-                About
-            </a>
-
-            <a href="#services">
-                Services
-            </a>
-
-            <a href="login.html">
-                Login
-            </a>
-
-        </div>
-
-
-        <div>
-
-            <h4>
-                SUPPORT
-            </h4>
-
-            <a href="#">
-                Contact
-            </a>
-
-            <a href="#">
-                Privacy Policy
-            </a>
-
-            <a href="#">
-                Terms
-            </a>
-
-        </div>
-
-    </div>
-
-
-    <div class="footer-bottom">
-
-        <div class="container">
-
-            NODE System © 2026.
-            All rights reserved.
-
-        </div>
-
-    </div>
-
-</footer>
 
 </main>
 
+
+<footer>
+
+  <div>
+    © 2026 NEDR Student Portal
+  </div>
+
+  <div>
+    Independent implementation
+  </div>
+
+</footer>
+
+
+<script src="script.js"></script>
+
 </body>
-</html>
+        </html>
