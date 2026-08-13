@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>NEDR | Student Login</title>
+
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
+
+</head>
+
+<body class="auth-page">
+
+<div class="auth-container">
+
+  <a href="index.html"
+     class="logo auth-logo">
+
+    <span class="logo-box">
+      N
+    </span>
+
+    NEDR
+
+  </a>
+
+
+  <div class="auth-card">
+
+    <div class="eyebrow">
+      STUDENT PORTAL
+    </div>
+
+    <h1>
+      Welcome back
+    </h1>
+
+    <p class="auth-subtitle">
+      Login to manage your academic submission.
+    </p>
+
+
+    <form id="loginForm">
+
+      <label>
+        Email Address
+
+        <input
+          type="email"
+          id="loginEmail"
+          required
+        >
+
+      </label>
+
+
+      <label>
+        Password
+
+        <input
+          type="password"
+          id="loginPassword"
+          required
+        >
+
+      </label>
+
+
+      <button
+        type="submit"
+        class="primary-btn full-btn"
+      >
+        Login
+      </button>
+
+
+      <p
+        id="loginMessage"
+        class="form-message"
+      ></p>
+
+    </form>
+
+
+    <p class="auth-bottom">
+
+      New student?
+
+      <a href="register.html">
+        Create account
+      </a>
+
+    </p>
+
+  </div>
+
+</div>
+
+
+<script
+  type="module"
+  src="login.js">
+</script>
+
+</body>
+
+</html>
