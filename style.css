@@ -1,0 +1,154 @@
+/* =========================================================
+   NODE — FORMAL EDUCATION PORTAL STYLE
+========================================================= */
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    color: #24313a;
+
+    background: #ffffff;
+
+    line-height: 1.6;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+
+/* =========================================================
+   VARIABLES
+========================================================= */
+
+:root {
+
+    --primary: #087443;
+    --primary-dark: #055c35;
+    --primary-light: #eaf6f0;
+
+    --secondary: #123c2b;
+
+    --accent: #d6a62c;
+
+    --text: #24313a;
+    --muted: #68757d;
+
+    --white: #ffffff;
+
+    --background: #f7f9f8;
+
+    --border: #dfe6e2;
+
+    --shadow:
+        0 8px 30px rgba(0, 0, 0, 0.07);
+
+    --radius: 6px;
+
+    --container: 1180px;
+}
+
+
+/* =========================================================
+   CONTAINER
+========================================================= */
+
+.container {
+    width: min(
+        var(--container),
+        calc(100% - 40px)
+    );
+
+    margin: 0 auto;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.site-header {
+    width: 100%;
+
+    background: var(--white);
+
+    border-bottom: 1px solid var(--border);
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 1000;
+}
+
+
+.header-inner {
+
+    min-height: 78px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 30px;
+}
+
+
+/* =========================================================
+   LOGO
+========================================================= */
+
+.logo {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    color: var(--secondary);
+
+    font-weight: 700;
+}
+
+
+.logo-mark {
+
+    width: 42px;
+
+    height: 42px;
+
+    display: flex;
