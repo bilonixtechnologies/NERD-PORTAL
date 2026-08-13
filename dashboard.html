@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>NEDR | Student Dashboard</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header class="navbar">
+
+  <a href="dashboard.html" class="logo">
+    <span class="logo-box">N</span>
+    NEDR
+  </a>
+
+  <nav>
+
+    <a href="dashboard.html">
+      Dashboard
+    </a>
+
+    <a href="profile.html">
+      Profile
+    </a>
+
+    <a href="project.html">
+      Project
+    </a>
+
+    <a href="clearance.html">
+      Clearance
+    </a>
+
+    <button
+      id="logoutButton"
+      class="login-btn"
+    >
+      Logout
+    </button>
+
+  </nav>
+
+</header>
+
+
+<main class="dashboard-page">
+
+  <section class="dashboard-header">
+
+    <div>
+
+      <div class="eyebrow">
+        STUDENT DASHBOARD
+      </div>
+
+      <h1 id="studentName">
+        Loading...
+      </h1>
+
+      <p id="studentEmail"></p>
+
+    </div>
+
+    <span
+      id="accountStatus"
+      class="status-badge"
+    >
+      Active
+    </span>
+
+  </section>
+
+
+  <section class="dashboard-cards">
+
+    <div class="dashboard-card">
+
+      <small>
+        Registration
+      </small>
+
+      <strong id="registrationStatus">
+        Checking...
+      </strong>
+
+    </div>
+
+
+    <div class="dashboard-card">
+
+      <small>
+        Profile
+      </small>
+
+      <strong id="profileStatus">
+        Checking...
+      </strong>
+
+    </div>
+
+
+    <div class="dashboard-card">
+
+      <small>
+        Project
+      </small>
+
+      <strong id="projectStatus">
+        Checking...
+      </strong>
+
+    </div>
+
+
+    <div class="dashboard-card">
+
+      <small>
+        Clearance
+      </small>
+
+      <strong id="clearanceStatus">
+        Checking...
+      </strong>
+
+    </div>
+
+  </section>
+
+
+  <section class="dashboard-main">
+
+    <div class="dashboard-panel">
+
+      <div class="panel-heading">
+
+        <div>
+
+          <div class="eyebrow">
+            NEXT STEP
+          </div>
+
+          <h2>
+            Complete your application
+          </h2>
+
+        </div>
+
+      </div>
+
+
+      <div
+        id="nextStep"
+        class="next-step"
+      >
+        Loading...
+      </div>
+
+    </div>
+
+
+    <div class="dashboard-panel">
+
+      <div class="eyebrow">
+        APPLICATION PROGRESS
+      </div>
+
+      <h2>
+        Your progress
+      </h2>
+
+      <div class="application-progress">
+
+        <div class="progress-row">
+
+          <span>
+            Account
+          </span>
+
+          <b id="progressAccount">
+            ✓
+          </b>
+
+        </div>
+
+
+        <div class="progress-row">
+
+          <span>
+            Registration Payment
+          </span>
+
+          <b id="progressPayment">
+            —
+          </b>
+
+        </div>
+
+
+        <div class="progress-row">
+
+          <span>
+            Student Profile
+          </span>
+
+          <b id="progressProfile">
+            —
+          </b>
+
+        </div>
+
+
+        <div class="progress-row">
+
+          <span>
+            Project
+          </span>
+
+          <b id="progressProject">
+            —
+          </b>
+
+        </div>
+
+
+        <div class="progress-row">
+
+          <span>
+            Clearance
+          </span>
+
+          <b id="progressClearance">
+            —
+          </b>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</main>
+
+
+<script
+  type="module"
+  src="dashboard.js"
+></script>
+
+</body>
+  </html>
