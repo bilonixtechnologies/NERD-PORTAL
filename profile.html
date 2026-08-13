@@ -1,1 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
+
+<title>NEDR | Student Profile</title>
+
+<link
+  rel="stylesheet"
+  href="style.css"
+>
+
+</head>
+
+
+<body>
+
+<header class="navbar">
+
+<a
+  href="dashboard.html"
+  class="logo"
+>
+
+<span class="logo-box">
+N
+</span>
+
+NEDR
+
+</a>
+
+
+<nav>
+
+<a href="dashboard.html">
+Dashboard
+</a>
+
+<a href="profile.html">
+Profile
+</a>
+
+<a href="project.html">
+Project
+</a>
+
+<a href="clearance.html">
+Clearance
+</a>
+
+</nav>
+
+</header>
+
+
+<main class="profile-page">
+
+<div class="page-heading">
+
+<div class="eyebrow">
+STUDENT INFORMATION
+</div>
+
+<h1>
+Complete your profile
+</h1>
+
+<p>
+All required information should be accurate
+before continuing to project submission.
+</p>
+
+</div>
+
+
+<form id="profileForm">
+
+
+<section class="profile-section">
+
+<h2>
+Personal Information
+</h2>
+
+
+<div class="form-grid">
+
+<label>
+
+First Name
+
+<input
+type="text"
+id="firstName"
+readonly
+>
+
+</label>
+
+
+<label>
+
+Middle Name
+
+<input
+type="text"
+id="middleName"
+>
+
+</label>
+
+
+<label>
+
+Surname
+
+<input
+type="text"
+id="surname"
+readonly
+>
+
+</label>
+
+
+<label>
+
+Date of Birth
+
+<input
+type="date"
+id="dateOfBirth"
+>
+
+</label>
+
+
+<label>
+
+Sex
+
+<select id="sex">
+
+<option value="">
+Select sex
+</option>
+
+<option value="Male">
+Male
+</option>
+
+<option value="Female">
+Female
+</option>
+
+</select>
+
+</label>
+
+
+<label>
+
+Religion
+
+<select id="religion">
+
+<option value="">
+Select religion
+</option>
+
+<option value="Christianity">
+Christianity
+</option>
+
+<option value="Islam">
+Islam
+</option>
+
+<option value="Traditional">
+Traditional
+</option>
+
+<option value="Other">
+Other
+</option>
+
+</select>
+
+</label>
+
+
+<label>
+
+Nationality
+
+<input
+type="text"
+id="nationality"
+value="Nigerian"
+>
+
+</label>
+
+
+<label>
+
+State of Origin
+
+<input
+type="text"
+id="stateOfOrigin"
+>
+
+</label>
+
+
+<label>
+
+Local Government Area
+
+<input
+type="text"
+id="lga"
+>
+
+</label>
+
+
+<label>
+
+Phone Number
+
+<input
+type="tel"
+id="phone"
+>
+
+</label>
+
+</div>
+
+</section>
+
+
+<section class="profile-section">
+
+<h2>
+Academic Information
+</h2>
+
+
+<div class="form-grid">
+
+<label>
+
+Institution
+
+<input
+type="text"
+id="institution"
+required
+>
+
+</label>
+
+
+<label>
+
+Faculty
+
+<input
+type="text"
+id="faculty"
+>
+
+</label>
+
+
+<label>
+
+Department
+
+<input
+type="text"
+id="department"
+>
+
+</label>
+
+
+<label>
+
+Programme
+
+<input
+type="text"
+id="programme"
+required
+>
+
+</label>
+
+
+<label>
+
+Matriculation /
+Registration Number
+
+<input
+type="text"
+id="matricNumber"
+>
+
+</label>
+
+
+<label>
+
+Degree
+
+<input
+type="text"
+id="degree"
+>
+
+</label>
+
+
+<label>
+
+Academic Session
+
+<input
+type="text"
+id="session"
+placeholder="2025/2026"
+>
+
+</label>
+
+</div>
+
+</section>
+
+
+<button
+type="submit"
+class="primary-btn save-profile"
+>
+
+Save & Continue
+
+</button>
+
+
+<p
+id="profileMessage"
+class="form-message"
+></p>
+
+
+</form>
+
+</main>
+
+
+<script
+type="module"
+src="profile.js"
+></script>
+
+</body>
+
+  </html>
