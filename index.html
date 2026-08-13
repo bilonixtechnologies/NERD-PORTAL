@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>NODE | National Online Document & Education</title>
+
+    <meta
+        name="description"
+        content="NODE - Digital education repository and academic document management platform."
+    >
+
+    <link rel="stylesheet" href="style.css">
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+        defer
+    ></script>
+
+    <script src="supabase.js" defer></script>
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+
+<header class="site-header">
+
+    <div class="container header-inner">
+
+        <a href="index.html" class="logo">
+            <span class="logo-mark">N</span>
+
+            <span class="logo-text">
+                NODE
+                <small>
+                    National Online Document & Education
+                </small>
+            </span>
+        </a>
+
+
+        <nav class="main-nav">
+
+            <a href="index.html">
+                Home
+            </a>
+
+            <a href="#about">
+                About
+            </a>
+
+            <a href="#services">
+                Services
+            </a>
+
+            <a href="login.html" class="nav-login">
+                Login
+            </a>
+
+        </nav>
+
+    </div>
+
+</header>
+
+
+<!-- ================= HERO ================= -->
+
+<main>
+
+<section class="hero">
+
+    <div class="container hero-grid">
+
+        <div class="hero-content">
+
+            <span class="eyebrow">
+                DIGITAL EDUCATION REPOSITORY
+            </span>
+
+            <h1>
+                Securely managing
+                <span>education records</span>
+                and academic outputs.
+            </h1>
+
+            <p>
+                NODE provides students, lecturers and
+                institutions with a secure digital platform
+                for managing academic information,
+                documents and educational records.
+            </p>
+
+            <div class="hero-buttons">
+
+                <a
+                    href="register.html"
+                    class="btn btn-primary"
+                >
+                    Register
+                </a>
+
+                <a
+                    href="login.html"
+                    class="btn btn-secondary"
+                >
+                    Login
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="login-card">
+
+            <div class="card-header">
+
+                <h2>
+                    NODE Login
+                </h2>
+
+                <p>
+                    Access your account
+                </p>
+
+            </div>
+
+
+            <form id="loginForm">
+
+                <div class="form-group">
+
+                    <label for="loginEmail">
+                        Email address
+                    </label>
+
+                    <input
+                        type="email"
+                        id="loginEmail"
+                        placeholder="Email address"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="loginPassword">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="loginPassword"
+                        placeholder="Password"
+                        required
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="btn btn-primary full-width"
+                >
+                    Sign in
+                </button>
+
+
+                <div id="message" class="message"></div>
+
+
+                <div class="login-links">
+
+                    <a href="register.html">
+                        New user? Register
+                    </a>
+
+                    <a href="forgot-password.html">
+                        Forgot password?
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= ABOUT ================= -->
+
+<section id="about" class="section">
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <span class="eyebrow">
+                ABOUT NODE
+            </span>
+
+            <h2>
+                A digital platform for education records
+            </h2>
+
+            <p>
+                NODE is designed to provide a centralized
+                digital environment for students,
+                lecturers and institutions to manage
+                academic information and educational
+                outputs.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= SERVICES ================= -->
+
+<section id="services" class="section section-light">
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <span class="eyebrow">
+                NODE SERVICES
+            </span>
+
+            <h2>
+                Digital education services
+            </h2>
+
+        </div>
+
+
+        <div class="services-grid">
+
+            <div class="service-card">
+
+                <div class="service-icon">
+                    01
+                </div>
+
+                <h3>
+                    Student Registration
+                </h3>
+
+                <p>
+                    Create and manage your NODE
+                    student profile and academic
+                    information.
+                </p>
+
+            </div>
+
+
+            <div class="service-card">
+
+                <div class="service-icon">
+                    02
+                </div>
+
+                <h3>
+                    Academic Submission
+                </h3>
+
+                <p>
+                    Submit projects, theses,
+                    dissertations and other
+                    academic outputs digitally.
+                </p>
+
+            </div>
+
+
+            <div class="service-card">
+
+                <div class="service-icon">
+                    03
+                </div>
+
+                <h3>
+                    Document Management
+                </h3>
+
+                <p>
+                    Securely upload and manage
+                    academic and identification
+                    documents.
+                </p>
+
+            </div>
+
+
+            <div class="service-card">
+
+                <div class="service-icon">
+                    04
+                </div>
+
+                <h3>
+                    Payment & Receipts
+                </h3>
+
+                <p>
+                    Manage applicable submission
+                    payments and access your
+                    payment records and receipts.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= QUICK MENU ================= -->
+
+<section class="quick-section">
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <span class="eyebrow">
+                QUICK MENU
+            </span>
+
+            <h2>
+                NODE resources
+            </h2>
+
+        </div>
+
+
+        <div class="quick-grid">
+
+            <a href="#" class="quick-item">
+                Student Registration
+            </a>
+
+            <a href="#" class="quick-item">
+                Student / Lecturer Access
+            </a>
+
+            <a href="#" class="quick-item">
+                Academic Submission
+            </a>
+
+            <a href="#" class="quick-item">
+                Payment & Receipts
+            </a>
+
+            <a href="#" class="quick-item">
+                Document Verification
+            </a>
+
+            <a href="#" class="quick-item">
+                Contact & Support
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="site-footer">
+
+    <div class="container footer-grid">
+
+        <div>
+
+            <div class="footer-logo">
+                NODE
+            </div>
+
+            <p>
+                Digital education repository and
+                academic document management.
+            </p>
+
+        </div>
+
+
+        <div>
+
+            <h4>
+                QUICK LINKS
+            </h4>
+
+            <a href="index.html">
+                Home
+            </a>
+
+            <a href="#about">
+                About
+            </a>
+
+            <a href="#services">
+                Services
+            </a>
+
+            <a href="login.html">
+                Login
+            </a>
+
+        </div>
+
+
+        <div>
+
+            <h4>
+                SUPPORT
+            </h4>
+
+            <a href="#">
+                Contact
+            </a>
+
+            <a href="#">
+                Privacy Policy
+            </a>
+
+            <a href="#">
+                Terms
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="footer-bottom">
+
+        <div class="container">
+
+            NODE System © 2026.
+            All rights reserved.
+
+        </div>
+
+    </div>
+
+</footer>
+
+</main>
+
+</body>
+</html>
