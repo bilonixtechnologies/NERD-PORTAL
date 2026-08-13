@@ -797,3 +797,80 @@ footer {
   }
 
 }
+.profile-page {
+  max-width: 1000px;
+
+  margin: auto;
+
+  padding: 60px 6%;
+}
+
+.page-heading {
+  margin-bottom: 30px;
+}
+
+.page-heading h1 {
+  font-size: 40px;
+
+  margin: 8px 0;
+}
+
+.page-heading p {
+  color: var(--muted);
+}
+
+.profile-section {
+  background: #fff;
+
+  border: 1px solid var(--border);
+
+  border-radius: 14px;
+
+  padding: 30px;
+
+  margin-bottom: 20px;
+}
+
+.profile-section h2 {
+  font-size: 22px;
+
+  margin-bottom: 25px;
+
+  padding-bottom: 15px;
+
+  border-bottom: 1px solid var(--border);
+}
+
+.profile-section select {
+  width: 100%;
+
+  padding: 13px;
+
+  margin-top: 7px;
+
+  border: 1px solid #cbd7e4;
+
+  border-radius: 8px;
+
+  background: #fff;
+}
+
+.save-profile {
+  border: 0;
+
+  cursor: pointer;
+
+  font-weight: 700;
+}
+
+@media(max-width:600px) {
+
+  .profile-page {
+    padding: 40px 6%;
+  }
+
+  .profile-section {
+    padding: 22px;
+  }
+
+}
