@@ -600,3 +600,30 @@ footer {
   }
 
 }
+.payment-amount {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  padding: 22px 0;
+
+  margin: 20px 0;
+
+  border-top: 1px solid var(--border);
+
+  border-bottom: 1px solid var(--border);
+}
+
+.payment-amount span {
+  color: var(--muted);
+
+  font-size: 14px;
+}
+
+.payment-amount strong {
+  font-size: 27px;
+
+  color: var(--blue);
+}
