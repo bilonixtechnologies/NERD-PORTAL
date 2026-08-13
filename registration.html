@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEDR | Student Registration</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="auth-page">
+
+<div class="auth-container">
+
+  <a href="index.html" class="logo auth-logo">
+    <span class="logo-box">N</span>
+    NEDR
+  </a>
+
+  <div class="auth-card">
+
+    <div class="eyebrow">
+      STUDENT REGISTRATION
+    </div>
+
+    <h1>Create your account</h1>
+
+    <p class="auth-subtitle">
+      Registration fee: <strong>₦2,500</strong>
+    </p>
+
+    <form id="registerForm">
+
+      <div class="form-grid">
+
+        <label>
+          First Name
+          <input
+            type="text"
+            id="firstName"
+            required
+          >
+        </label>
+
+        <label>
+          Middle Name
+          <input
+            type="text"
+            id="middleName"
+          >
+        </label>
+
+        <label>
+          Surname
+          <input
+            type="text"
+            id="surname"
+            required
+          >
+        </label>
+
+        <label>
+          Email Address
+          <input
+            type="email"
+            id="email"
+            required
+          >
+        </label>
+
+        <label>
+          Phone Number
+          <input
+            type="tel"
+            id="phone"
+            required
+          >
+        </label>
+
+        <label>
+          Password
+          <input
+            type="password"
+            id="password"
+            minlength="8"
+            required
+          >
+        </label>
+
+      </div>
+
+      <label class="checkbox">
+
+        <input
+          type="checkbox"
+          required
+        >
+
+        <span>
+          I confirm that the information supplied
+          is accurate.
+        </span>
+
+      </label>
+
+      <button
+        type="submit"
+        class="primary-btn full-btn"
+      >
+        Create Account & Continue
+      </button>
+
+      <p id="registerMessage"
+         class="form-message">
+      </p>
+
+    </form>
+
+    <p class="auth-bottom">
+      Already have an account?
+      <a href="login.html">Login</a>
+    </p>
+
+  </div>
+
+</div>
+
+<script type="module"
+        src="register.js">
+</script>
+
+</body>
+</html>
