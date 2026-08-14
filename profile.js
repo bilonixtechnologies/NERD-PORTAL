@@ -555,15 +555,16 @@ form.addEventListener(
 
     if (error) {
 
-      console.error(error);
+  console.error("PROFILE SAVE ERROR:", error);
 
-      message.style.color =
-        "#c62828";
+  message.style.color =
+    "#c62828";
 
-      message.textContent =
-        error.message;
+  message.textContent =
+    "Profile could not be saved: " +
+    error.message;
 
-      return;
+  return;
 
     }
 
