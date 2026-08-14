@@ -259,19 +259,137 @@ const requiredFields = [
   Submit profile
 */
 
-form.addEventListener(
-  "submit",
-  async event => {
 
-    event.preventDefault();
+form.addEventListener("submit", async (event) => {
+
+  event.preventDefault();
+
+  message.style.color = "#c62828";
+  message.textContent = "Saving profile...";
+
+  try {
+
+    const updates = {
+
+      first_name:
+        document.getElementById("firstName").value.trim(),
+
+      surname:
+        document.getElementById("surname").value.trim(),
+
+      middle_name:
+        document.getElementById("middleName").value.trim(),
+
+      date_of_birth:
+        document.getElementById("dateOfBirth").value || null,
+
+      sex:
+        document.getElementById("sex").value,
+
+      religion:
+        document.getElementById("religion").value,
+
+      nationality:
+        document.getElementById("nationality").value.trim(),
+
+      state_of_origin:
+        document.getElementById("stateOfOrigin").value.trim(),
+
+      lga:
+        document.getElementById("lga").value.trim(),
+
+      phone:
+        document.getElementById("phone").value.trim(),
+
+      institution:
+        document.getElementById("institution").value.trim(),
+
+      faculty:
+        document.getElementById("faculty").value.trim(),
+
+      department:
+        document.getElementById("department").value.trim(),
+
+      programme:
+        document.getElementById("programme").value.trim(),
+
+      matric_number:
+        document.getElementById("matricNumber").value.trim(),
+
+      degree:
+        document.getElementById("degree").value.trim(),
+
+      session:
+        document.getElementById("session").value.trim(),
+
+      updated_at:
+        new Date().toISOString()
+
+    };
+
+
+    console.log("Saving profile:", updates);
+
+
+    const {
+      error
+    } = await supabase
+      .from("profiles")
+      .upsert(
+        {
+          id: user.id,
+          ...updates
+        },
+        {
+          onConflict: "id"
+        }
+      );
+
+
+    if (error) {
+
+      console.error(
+        "SUPABASE ERROR:",
+        error
+      );
+
+      message.textContent =
+        "Save failed: " +
+        error.message;
+
+      return;
+    }
 
 
     message.style.color =
-      "#c62828";
+      "#16824d";
 
     message.textContent =
-      "Checking your information...";
+      "Profile completed successfully.";
 
+
+    setTimeout(() => {
+
+      window.location.href =
+        "registration-summary.html";
+
+    }, 1000);
+
+
+  } catch (error) {
+
+    console.error(
+      "JAVASCRIPT ERROR:",
+      error
+    );
+
+    message.textContent =
+      "Error: " +
+      error.message;
+
+  }
+
+});
 
     /*
       Validate
