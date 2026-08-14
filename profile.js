@@ -4,9 +4,11 @@ import {
 } from "./supabase.js";
 
 
-const user =
-  await requireUser();
+/*
+  Require logged-in user
+*/
 
+const user = await requireUser();
 
 if (!user) {
   throw new Error(
@@ -14,6 +16,15 @@ if (!user) {
   );
 }
 
+
+/*
+  Page elements
+*/
+
+const form =
+  document.getElementById(
+    "profileForm"
+  );
 
 const message =
   document.getElementById(
@@ -27,130 +38,260 @@ const message =
 
 const {
   data: profile,
-  error
-} =
-  await supabase
-    .from("profiles")
-    .select("*")
-    .eq("id", user.id)
-    .single();
+  error: profileError
+} = await supabase
+  .from("profiles")
+  .select("*")
+  .eq("id", user.id)
+  .single();
 
 
-if (error) {
+if (profileError) {
 
   message.textContent =
-    error.message;
+    profileError.message;
 
 }
 
 
 /*
-  Populate fields
+  Helper function
+*/
+
+function setValue(
+  id,
+  value
+) {
+
+  const element =
+    document.getElementById(id);
+
+  if (element) {
+
+    element.value =
+      value ?? "";
+
+  }
+
+}
+
+
+/*
+  Populate existing information
 */
 
 if (profile) {
 
-  document.getElementById(
-    "firstName"
-  ).value =
-    profile.first_name || "";
+  setValue(
+    "firstName",
+    profile.first_name
+  );
 
+  setValue(
+    "middleName",
+    profile.middle_name
+  );
 
-  document.getElementById(
-    "middleName"
-  ).value =
-    profile.middle_name || "";
+  setValue(
+    "surname",
+    profile.surname
+  );
 
+  setValue(
+    "dateOfBirth",
+    profile.date_of_birth
+  );
 
-  document.getElementById(
-    "surname"
-  ).value =
-    profile.surname || "";
+  setValue(
+    "sex",
+    profile.sex
+  );
 
+  setValue(
+    "religion",
+    profile.religion
+  );
 
-  document.getElementById(
-    "dateOfBirth"
-  ).value =
-    profile.date_of_birth || "";
-
-
-  document.getElementById(
-    "sex"
-  ).value =
-    profile.sex || "";
-
-
-  document.getElementById(
-    "religion"
-  ).value =
-    profile.religion || "";
-
-
-  document.getElementById(
-    "nationality"
-  ).value =
+  setValue(
+    "nationality",
     profile.nationality ||
-    "Nigerian";
+    "Nigerian"
+  );
+
+  setValue(
+    "stateOfOrigin",
+    profile.state_of_origin
+  );
+
+  setValue(
+    "lga",
+    profile.lga
+  );
+
+  setValue(
+    "phone",
+    profile.phone
+  );
+
+  setValue(
+    "address",
+    profile.address
+  );
+
+  setValue(
+    "contactState",
+    profile.contact_state
+  );
+
+  setValue(
+    "contactLga",
+    profile.contact_lga
+  );
+
+  setValue(
+    "institution",
+    profile.institution
+  );
+
+  setValue(
+    "faculty",
+    profile.faculty
+  );
+
+  setValue(
+    "department",
+    profile.department
+  );
+
+  setValue(
+    "programme",
+    profile.programme
+  );
+
+  setValue(
+    "matricNumber",
+    profile.matric_number
+  );
+
+  setValue(
+    "degree",
+    profile.degree
+  );
+
+  setValue(
+    "level",
+    profile.level
+  );
+
+  setValue(
+    "session",
+    profile.session
+  );
+
+  setValue(
+    "projectTitle",
+    profile.project_title
+  );
+
+  setValue(
+    "supervisorName",
+    profile.supervisor_name
+  );
+
+  setValue(
+    "supervisorEmail",
+    profile.supervisor_email
+  );
+
+  setValue(
+    "hodName",
+    profile.hod_name
+  );
+
+  setValue(
+    "hodEmail",
+    profile.hod_email
+  );
+
+}
 
 
-  document.getElementById(
-    "stateOfOrigin"
-  ).value =
-    profile.state_of_origin || "";
+/*
+  Display authenticated email
+*/
+
+setValue(
+  "email",
+  user.email
+);
 
 
-  document.getElementById(
-    "lga"
-  ).value =
-    profile.lga || "";
+/*
+  Required fields
+*/
+
+const requiredFields = [
+
+  "dateOfBirth",
+  "sex",
+  "religion",
+  "nationality",
+  "stateOfOrigin",
+  "lga",
+  "phone",
+
+  "address",
+  "contactState",
+  "contactLga",
+
+  "institution",
+  "faculty",
+  "department",
+  "programme",
+  "matricNumber",
+  "degree",
+  "level",
+  "session",
+
+  "projectTitle",
+  "supervisorName",
+  "supervisorEmail",
+  "hodName",
+  "hodEmail"
+
+];
 
 
-  document.getElementById(
-    "phone"
-  ).value =
-    profile.phone || "";
+/*
+  Validate profile
+*/
 
+function validateProfile() {
 
-  document.getElementById(
-    "institution"
-  ).value =
-    profile.institution || "";
+  for (
+    const fieldId
+    of requiredFields
+  ) {
 
+    const field =
+      document.getElementById(
+        fieldId
+      );
 
-  document.getElementById(
-    "faculty"
-  ).value =
-    profile.faculty || "";
+    if (
+      !field ||
+      !field.value.trim()
+    ) {
 
+      field?.focus();
 
-  document.getElementById(
-    "department"
-  ).value =
-    profile.department || "";
+      return false;
 
+    }
 
-  document.getElementById(
-    "programme"
-  ).value =
-    profile.programme || "";
+  }
 
-
-  document.getElementById(
-    "matricNumber"
-  ).value =
-    profile.matric_number || "";
-
-
-  document.getElementById(
-    "degree"
-  ).value =
-    profile.degree || "";
-
-
-  document.getElementById(
-    "session"
-  ).value =
-    profile.session || "";
+  return true;
 
 }
 
@@ -159,136 +300,291 @@ if (profile) {
   Save profile
 */
 
-document
-  .getElementById("profileForm")
-  .addEventListener(
-    "submit",
-    async event => {
+form.addEventListener(
+  "submit",
+  async event => {
 
-      event.preventDefault();
-
-      message.textContent =
-        "Saving profile...";
+    event.preventDefault();
 
 
-      const updates = {
+    /*
+      Validate
+    */
 
-        middle_name:
-          document.getElementById(
-            "middleName"
-          ).value.trim(),
-
-        date_of_birth:
-          document.getElementById(
-            "dateOfBirth"
-          ).value || null,
-
-        sex:
-          document.getElementById(
-            "sex"
-          ).value,
-
-        religion:
-          document.getElementById(
-            "religion"
-          ).value,
-
-        nationality:
-          document.getElementById(
-            "nationality"
-          ).value.trim(),
-
-        state_of_origin:
-          document.getElementById(
-            "stateOfOrigin"
-          ).value.trim(),
-
-        lga:
-          document.getElementById(
-            "lga"
-          ).value.trim(),
-
-        phone:
-          document.getElementById(
-            "phone"
-          ).value.trim(),
-
-        institution:
-          document.getElementById(
-            "institution"
-          ).value.trim(),
-
-        faculty:
-          document.getElementById(
-            "faculty"
-          ).value.trim(),
-
-        department:
-          document.getElementById(
-            "department"
-          ).value.trim(),
-
-        programme:
-          document.getElementById(
-            "programme"
-          ).value.trim(),
-
-        matric_number:
-          document.getElementById(
-            "matricNumber"
-          ).value.trim(),
-
-        degree:
-          document.getElementById(
-            "degree"
-          ).value.trim(),
-
-        session:
-          document.getElementById(
-            "session"
-          ).value.trim(),
-
-        updated_at:
-          new Date().toISOString()
-
-      };
-
-
-      const {
-        error
-      } =
-        await supabase
-          .from("profiles")
-          .update(updates)
-          .eq("id", user.id);
-
-
-      if (error) {
-
-        message.textContent =
-          error.message;
-
-        return;
-
-      }
-
+    if (
+      !validateProfile()
+    ) {
 
       message.style.color =
-        "#16824d";
+        "#c62828";
 
       message.textContent =
-        "Profile saved successfully.";
+        "Please complete all required fields before continuing.";
 
-
-      setTimeout(
-        () => {
-
-          window.location.href =
-            "dashboard.html";
-
-        },
-        800
-      );
+      return;
 
     }
-  );
+
+
+    /*
+      Show saving message
+    */
+
+    message.style.color =
+      "";
+
+    message.textContent =
+      "Saving profile...";
+
+
+    /*
+      Build profile update
+    */
+
+    const updates = {
+
+      middle_name:
+        document
+          .getElementById(
+            "middleName"
+          )
+          .value
+          .trim(),
+
+      date_of_birth:
+        document
+          .getElementById(
+            "dateOfBirth"
+          )
+          .value || null,
+
+      sex:
+        document
+          .getElementById(
+            "sex"
+          )
+          .value,
+
+      religion:
+        document
+          .getElementById(
+            "religion"
+          )
+          .value,
+
+      nationality:
+        document
+          .getElementById(
+            "nationality"
+          )
+          .value
+          .trim(),
+
+      state_of_origin:
+        document
+          .getElementById(
+            "stateOfOrigin"
+          )
+          .value
+          .trim(),
+
+      lga:
+        document
+          .getElementById(
+            "lga"
+          )
+          .value
+          .trim(),
+
+      phone:
+        document
+          .getElementById(
+            "phone"
+          )
+          .value
+          .trim(),
+
+      address:
+        document
+          .getElementById(
+            "address"
+          )
+          .value
+          .trim(),
+
+      contact_state:
+        document
+          .getElementById(
+            "contactState"
+          )
+          .value
+          .trim(),
+
+      contact_lga:
+        document
+          .getElementById(
+            "contactLga"
+          )
+          .value
+          .trim(),
+
+      institution:
+        document
+          .getElementById(
+            "institution"
+          )
+          .value
+          .trim(),
+
+      faculty:
+        document
+          .getElementById(
+            "faculty"
+          )
+          .value
+          .trim(),
+
+      department:
+        document
+          .getElementById(
+            "department"
+          )
+          .value
+          .trim(),
+
+      programme:
+        document
+          .getElementById(
+            "programme"
+          )
+          .value
+          .trim(),
+
+      matric_number:
+        document
+          .getElementById(
+            "matricNumber"
+          )
+          .value
+          .trim(),
+
+      degree:
+        document
+          .getElementById(
+            "degree"
+          )
+          .value
+          .trim(),
+
+      level:
+        document
+          .getElementById(
+            "level"
+          )
+          .value,
+
+      session:
+        document
+          .getElementById(
+            "session"
+          )
+          .value
+          .trim(),
+
+      project_title:
+        document
+          .getElementById(
+            "projectTitle"
+          )
+          .value
+          .trim(),
+
+      supervisor_name:
+        document
+          .getElementById(
+            "supervisorName"
+          )
+          .value
+          .trim(),
+
+      supervisor_email:
+        document
+          .getElementById(
+            "supervisorEmail"
+          )
+          .value
+          .trim(),
+
+      hod_name:
+        document
+          .getElementById(
+            "hodName"
+          )
+          .value
+          .trim(),
+
+      hod_email:
+        document
+          .getElementById(
+            "hodEmail"
+          )
+          .value
+          .trim(),
+
+      updated_at:
+        new Date().toISOString()
+
+    };
+
+
+    /*
+      Update Supabase
+    */
+
+    const {
+      error
+    } = await supabase
+      .from("profiles")
+      .update(updates)
+      .eq("id", user.id);
+
+
+    /*
+      Handle error
+    */
+
+    if (error) {
+
+      console.error(error);
+
+      message.style.color =
+        "#c62828";
+
+      message.textContent =
+        error.message;
+
+      return;
+
+    }
+
+
+    /*
+      Success
+    */
+
+    message.style.color =
+      "#16824d";
+
+    message.textContent =
+      "Profile completed successfully.";
+
+
+    /*
+      Return to dashboard
+    */
+
+    setTimeout(
+      () => {
+
+        window.location.href =
+          "
