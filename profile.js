@@ -580,11 +580,15 @@ form.addEventListener(
 
 
     /*
-      Return to dashboard
-    */
+  Return to registration summary
+*/
 
-    setTimeout(
-      () => {
+setTimeout(
+  () => {
 
-        window.location.href =
-          "
+    window.location.href =
+      "registration-summary.html";
+
+  },
+  1000
+);
