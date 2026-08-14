@@ -34,7 +34,8 @@ form.addEventListener("submit", async (event) => {
 
       options: {
         emailRedirectTo:
-          "https://bilonixtechnologies.github.io/web/",
+  "https://bilonixtechnologies.github.io/NERD-PORTAL/",
+          
 
         data: {
           first_name: firstName,
