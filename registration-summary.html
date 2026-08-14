@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
+
+<title>NEDR | Registration Summary</title>
+
+<link
+  rel="stylesheet"
+  href="style.css"
+>
+
+<style>
+
+.summary-page {
+  max-width: 1000px;
+  margin: auto;
+  padding: 40px 5%;
+}
+
+.summary-actions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+}
+
+.summary-slip {
+  background: #fff;
+  border: 1px solid #dfe4e8;
+  box-shadow: 0 4px 18px rgba(0,0,0,.07);
+  padding: 35px;
+}
+
+.summary-header {
+  text-align: center;
+  border-bottom: 3px solid #006b3f;
+  padding-bottom: 20px;
+  margin-bottom: 25px;
+}
+
+.summary-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 25px;
+  font-weight: 800;
+  color: #006b3f;
+}
+
+.summary-logo-box {
+  width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #f4c300;
+  color: #006b3f;
+  font-weight: 900;
+  border-radius: 4px;
+}
+
+.summary-header h1 {
+  margin: 15px 0 5px;
+  font-size: 25px;
+  color: #006b3f;
+}
+
+.summary-header p {
+  color: #6b7280;
+  margin: 0;
+}
+
+.summary-section {
+  margin-bottom: 28px;
+}
+
+.summary-section h2 {
+  color: #006b3f;
+  font-size: 18px;
+  border-bottom: 2px solid #f4c300;
+  padding-bottom: 8px;
+  margin-bottom: 15px;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0;
+  border: 1px solid #dfe4e8;
+}
+
+.summary-item {
+  padding: 12px 15px;
+  border-bottom: 1px solid #dfe4e8;
+}
+
+.summary-item:nth-child(odd) {
+  border-right: 1px solid #dfe4e8;
+}
+
+.summary-label {
+  display: block;
+  color: #6b7280;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+
+.summary-value {
+  font-size: 14px;
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.summary-notice {
+  background: #f7faf8;
+  border-left: 4px solid #006b3f;
+  padding: 15px;
+  margin-top: 25px;
+  font-size: 13px;
+}
+
+.summary-footer {
+  margin-top: 35px;
+  padding-top: 20px;
+  border-top: 1px solid #dfe4e8;
+  text-align: center;
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.secondary-btn {
+  display: inline-block;
+  background: #fff;
+  color: #006b3f;
+  border: 1px solid #006b3f;
+  padding: 13px 22px;
+  border-radius: 4px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.loading {
+  text-align: center;
+  padding: 50px;
+  color: #6b7280;
+}
+
+.error-box {
+  background: #fff;
+  border-left: 4px solid #c62828;
+  padding: 20px;
+  color: #c62828;
+}
+
+@media (max-width: 650px) {
+
+  .summary-page {
+    padding: 25px 4%;
+  }
+
+  .summary-slip {
+    padding: 20px;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .summary-item:nth-child(odd) {
+    border-right: 0;
+  }
+
+  .summary-actions {
+    flex-direction: column;
+  }
+
+  .summary-actions a,
+  .summary-actions button {
+    width: 100%;
+    text-align: center;
+  }
+
+}
+
+@media print {
+
+  body {
+    background: #fff;
+  }
+
+  .navbar,
+  .summary-actions {
+    display: none !important;
+  }
+
+  .summary-page {
+    max-width: 100%;
+    padding: 0;
+  }
+
+  .summary-slip {
+    box-shadow: none;
+    border: 0;
+    padding: 0;
+  }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header class="navbar">
+
+<a
+  href="dashboard.html"
+  class="logo"
+>
+
+<span class="logo-box">
+N
+</span>
+
+NEDR
+
+</a>
+
+
+<nav>
+
+<a href="dashboard.html">
+Dashboard
+</a>
+
+<a href="profile.html">
+Profile
+</a>
+
+<a href="project.html">
+Project
+</a>
+
+<a href="clearance.html">
+Clearance
+</a>
+
+</nav>
+
+</header>
+
+
+<main class="summary-page">
+
+
+<div class="summary-actions">
+
+<button
+  type="button"
+  id="printButton"
+  class="primary-btn"
+>
+Print Registration Summary
+</button>
+
+
+<a
+  href="profile.html"
+  class="secondary-btn"
+>
+Edit Profile
+</a>
+
+</div>
+
+
+<div
+  id="loading"
+  class="loading"
+>
+Loading registration information...
+</div>
+
+
+<div
+  id="errorBox"
+  class="error-box"
+  style="display:none;"
+></div>
+
+
+<div
+  id="summarySlip"
+  class="summary-slip"
+  style="display:none;"
+>
+
+
+<header class="summary-header">
+
+<div class="summary-logo">
+
+<span class="summary-logo-box">
+N
+</span>
+
+NEDR
+
+</div>
+
+<h1>
+STUDENT REGISTRATION SUMMARY
+</h1>
+
+<p>
+National Education Data Registration
+</p>
+
+</header>
+
+
+<section class="summary-section">
+
+<h2>
+Personal Information
+</h2>
+
+
+<div class="summary-grid">
+
+
+<div class="summary-item">
+<span class="summary-label">Full Name</span>
+<span
+  class="summary-value"
+  id="fullName"
+>
+—
+</span>
+</div>
+
+
+<div class="summary-item">
+<span class="summary-label">Email Address</span>
+<span
+  class="summary-value"
+  id="email"
+>
+—
+</span>
+</div>
+
+
+<div class="summary-item">
+<span class="summary-label">Date of Birth</span>
+<span
+  class="summary-value"
+  id="dateOfBirth"
+>
+—
+</span>
+</div>
+
+
+<div class="summary-item">
+<span class="summary-label">Sex</span>
+<span
+  class="summary-value"
+  id="sex"
+>
+—
+</span>
+</div>
+
+
+<div class="summary-item">
+<span class="summary-label">Religion</span>
+<span
+  class="summary-value"
+  id="religion"
+>
+—
+</span>
+</div>
+
+
+<div class="summary-item">
+<span class="summary-label">Nationality</span>
+<span
+  class="summary-value"
+  id="nationality"
+>
+—
+</span>
+</div>
+
+
+<div class="summary-item">
+<span class="summary-label">State of Origin</span>
+<span
+  class="summary-value"
+  id="stateOfOrigin"
+>
+—
+</span>
+</div>
+
+
+<div class="summary-item">
+<span class="summary-label">LGA</span>
+<span
+  class="summary-value"
+  id="lga"
+>
+—
+</span>
+</div>
+
+
+<div class="summary-item">
+<span class="summary-label">Phone Number</span>
+<span
+  class="summary-value"
+  id="phone"
+>
+—
+</span>
+</div>
+
+
+</div>
+
+</section>
+
+
+<section class="summary-section">
+
+<h2>
+Contact Information
+</h2>
+
+
+<div class="summary-grid">
+
+
+<div class="summary-item">
+<span class="summary-label">Address</span>
+<span
+  class="summary-value"
+  id="address"
+>
+—
+</span>
+</div>
+
+
+<div class="summary-item">
+<span class="summary-label">Contact State</span>
+<span
+  class="summary-value"
+  id="contactState"
+>
+—
+</span>
+</div>
+
+
+<div class="summary-item">
+<span class="summary-label">Contact LGA</span>
+<span
+  class="summary-value"
+  id="contactLga"
+>
+—
+</span>
+</div>
+
+
+</div>
+
+</section>
+
+
+<section class="summary-section">
+
+<h2>
+Academic Information
+</h2>
+
+
+<div class="summary-grid">
+
+
+<div class="summary-item">
+<span class="summary-label">Institution</span>
+<span
+  class="summary-value"
+  id="institution"
+>
+—
+</span>
+</div>
+
+
+<div class="summary-item">
+<span class="summary-label">Faculty</span>
+<span
+  class="summary-value"
+  id="faculty"
+>
+—
+</span>
+</div>
+
+
+<div class="summary-item">
+<span class="summary-label">Department</span>
+<span
+  class="summary-value"
+  id="department"
+>
+—
+</span>
+</div>
+
+
+<div class="summary-item">
+<span class="summary-label">Programme</span>
+<span
+  class="summary-value"
+  id="programme"
+>
+—
+</span>
+</div>
+
+
+<div class="summary-item">
+<span class="summary-label">Matriculation / Registration Number</span>
+<span
+  class="summary-value"
+  id="matricNumber"
+>
+—
+</span>
+</div>
+
+
+<div class="summary-item">
+<span class="summary-label">Degree</span>
+<span
+  class="summary-value"
+  id="degree"
+>
+—
+</span>
+</div>
+
+
+<div class="summary-item">
+<span class="summary-label">Level</span>
+<span
+  class="summary-value"
+  id="level"
+>
+—
+</span>
+</div>
+
+
+<div class="summary-item">
+<span class="summary-label">Academic Session</span>
+<span
+  class="summary-value"
+  id="session"
+>
+—
+</span>
+</div>
+
+
+</div>
+
+</section>
+
+
+<section class="summary-section">
+
+<h2>
+Project Information
+</h2>
+
+
+<div class="summary-grid">
+
+
+<div class="summary-item">
+<span class="summary-label">Project Title</span>
+<span
+  class="summary-value"
+  id="projectTitle"
+>
+—
+</span>
+</div>
+
+
+<div class="summary-item">
+<span class="summary-label">Supervisor Name</span>
+<span
+  class="summary-value"
+  id="supervisorName"
+>
+—
+</span>
+</div>
+
+
+<div class="summary-item">
+<span class="summary-label">Supervisor Email</span>
+<span
+  class="summary-value"
+  id="supervisorEmail"
+>
+—
+</span>
+</div>
+
+
+<div class="summary-item">
+<span class="summary-label">HOD Name</span>
+<span
+  class="summary-value"
+  id="hodName"
+>
+—
+</span>
+</div>
+
+
+<div class="summary-item">
+<span class="summary-label">HOD Email</span>
+<span
+  class="summary-value"
+  id="hodEmail"
+>
+—
+</span>
+</div>
+
+
+</div>
+
+</section>
+
+
+<div class="summary-notice">
+
+<strong>Important:</strong>
+
+Please carefully review all information above.
+If any information is incorrect, return to your
+profile and make the necessary corrections before
+proceeding with the registration payment.
+
+</div>
+
+
+<footer class="summary-footer">
+
+This registration summary is generated from the
+information saved in the student's account.
+
+</footer>
+
+
+</div>
+
+
+<div
+  id="paymentAction"
+  class="summary-actions"
+  style="display:none; margin-top:25px;"
+>
+
+<a
+  href="payment.html?type=registration"
+  class="primary-btn"
+>
+Proceed to ₦2,500 Registration Payment
+</a>
+
+</div>
+
+
+</main>
+
+
+<script
+  type="module"
+  src="registration-summary.js"
+></script>
+
+
+</body>
+
+  </html>
