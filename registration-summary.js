@@ -4,73 +4,44 @@ import {
 } from "./supabase.js";
 
 
-/*
-  Require logged-in student
-*/
-
 const user = await requireUser();
 
 if (!user) {
-  throw new Error(
-    "Authentication required."
-  );
+  throw new Error("Authentication required.");
 }
 
 
-/*
-  Page elements
-*/
-
 const loading =
-  document.getElementById(
-    "loading"
-  );
+  document.getElementById("loading");
 
 const errorBox =
-  document.getElementById(
-    "errorBox"
-  );
+  document.getElementById("errorBox");
 
 const summarySlip =
-  document.getElementById(
-    "summarySlip"
-  );
+  document.getElementById("summarySlip");
 
 const paymentAction =
-  document.getElementById(
-    "paymentAction"
-  );
+  document.getElementById("paymentAction");
 
 const printButton =
-  document.getElementById(
-    "printButton"
-  );
+  document.getElementById("printButton");
 
 
-/*
-  Helper
-*/
-
-function displayValue(
-  id,
-  value
-) {
+function displayValue(id, value) {
 
   const element =
     document.getElementById(id);
 
   if (element) {
-
     element.textContent =
       value || "—";
-
   }
 
 }
 
 
 /*
-  Load profile
+  Load student profile
 */
 
 const {
@@ -80,53 +51,39 @@ const {
   .from("profiles")
   .select("*")
   .eq("id", user.id)
-  .single();
+  .maybeSingle();
 
-
-/*
-  Handle database error
-*/
 
 if (error) {
 
-  loading.style.display =
-    "none";
+  loading.style.display = "none";
 
-  errorBox.style.display =
-    "block";
+  errorBox.style.display = "block";
 
   errorBox.textContent =
+    "Could not load your profile: " +
     error.message;
 
   throw error;
-
 }
 
-
-/*
-  Make sure profile exists
-*/
 
 if (!profile) {
 
-  loading.style.display =
-    "none";
+  loading.style.display = "none";
 
-  errorBox.style.display =
-    "block";
+  errorBox.style.display = "block";
 
   errorBox.textContent =
-    "Your student profile could not be found. Please complete your profile first.";
+    "Your profile was not found. Please return to the Profile page and complete your information.";
 
-  throw new Error(
-    "Profile not found."
-  );
+  throw new Error("Profile not found.");
 
 }
 
 
 /*
-  Build full name
+  Full name
 */
 
 const fullName = [
@@ -136,8 +93,8 @@ const fullName = [
   profile.surname
 
 ]
-  .filter(Boolean)
-  .join(" ");
+.filter(Boolean)
+.join(" ");
 
 
 /*
@@ -191,26 +148,6 @@ displayValue(
 
 
 /*
-  Contact information
-*/
-
-displayValue(
-  "address",
-  profile.address
-);
-
-displayValue(
-  "contactState",
-  profile.contact_state
-);
-
-displayValue(
-  "contactLga",
-  profile.contact_lga
-);
-
-
-/*
   Academic information
 */
 
@@ -245,47 +182,13 @@ displayValue(
 );
 
 displayValue(
-  "level",
-  profile.level
-);
-
-displayValue(
   "session",
   profile.session
 );
 
 
 /*
-  Project information
-*/
-
-displayValue(
-  "projectTitle",
-  profile.project_title
-);
-
-displayValue(
-  "supervisorName",
-  profile.supervisor_name
-);
-
-displayValue(
-  "supervisorEmail",
-  profile.supervisor_email
-);
-
-displayValue(
-  "hodName",
-  profile.hod_name
-);
-
-displayValue(
-  "hodEmail",
-  profile.hod_email
-);
-
-
-/*
+  Hide loading
   Show summary
 */
 
@@ -300,7 +203,7 @@ paymentAction.style.display =
 
 
 /*
-  Print summary
+  Print
 */
 
 printButton.addEventListener(
