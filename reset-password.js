@@ -1,84 +1,92 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+import { supabase } from "./supabase.js";
 
-  <meta charset="UTF-8">
+const form =
+  document.getElementById("resetPasswordForm");
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+const message =
+  document.getElementById("resetPasswordMessage");
 
-  <title>Reset Password | NERD</title>
 
-  <link rel="stylesheet" href="style.css">
+form.addEventListener("submit", async (event) => {
 
-</head>
+  event.preventDefault();
 
-<body>
+  message.textContent = "Updating password...";
+  message.style.color = "";
 
-  <main class="auth-page">
+  const newPassword =
+    document
+      .getElementById("newPassword")
+      .value;
 
-    <section class="auth-card">
+  const confirmPassword =
+    document
+      .getElementById("confirmPassword")
+      .value;
 
-      <div class="auth-logo">
-        NERD
-      </div>
 
-      <h1>Reset Your Password</h1>
+  if (newPassword !== confirmPassword) {
 
-      <p>
-        Create a new password for your NERD account.
-      </p>
+    message.style.color = "#b33131";
 
-      <form id="resetPasswordForm">
+    message.textContent =
+      "Passwords do not match.";
 
-        <label for="newPassword">
-          New Password
-        </label>
+    return;
+  }
 
-        <input
-          type="password"
-          id="newPassword"
-          name="newPassword"
-          placeholder="Enter new password"
-          minlength="6"
-          required
-        >
 
-        <label for="confirmPassword">
-          Confirm New Password
-        </label>
+  if (newPassword.length < 6) {
 
-        <input
-          type="password"
-          id="confirmPassword"
-          name="confirmPassword"
-          placeholder="Confirm new password"
-          minlength="6"
-          required
-        >
+    message.style.color = "#b33131";
 
-        <button type="submit">
-          Update Password
-        </button>
+    message.textContent =
+      "Password must be at least 6 characters.";
 
-      </form>
+    return;
+  }
 
-      <p id="resetPasswordMessage"></p>
 
-      <a href="login.html">
-        ← Back to Login
-      </a>
+  try {
 
-    </section>
+    const { error } =
+      await supabase.auth.updateUser({
+        password: newPassword
+      });
 
-  </main>
 
-  <script
-    type="module"
-    src="reset-password.js">
-  </script>
+    if (error) {
+      throw error;
+    }
 
-</body>
-</html>
+
+    message.style.color = "#16824d";
+
+    message.textContent =
+      "Your password has been updated successfully. Redirecting to login...";
+
+
+    setTimeout(() => {
+
+      window.location.href =
+        "login.html";
+
+    }, 2000);
+
+
+  } catch (error) {
+
+    console.error(
+      "Password update error:",
+      error
+    );
+
+    message.style.color = "#b33131";
+
+    message.textContent =
+      error.message ||
+      "Unable to update password.";
+
+  }
+
+});
