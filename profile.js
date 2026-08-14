@@ -4,32 +4,18 @@ import {
 } from "./supabase.js";
 
 
-/*
-  Require logged-in user
-*/
-
 const user = await requireUser();
 
 if (!user) {
-  throw new Error(
-    "Authentication required."
-  );
+  throw new Error("Authentication required.");
 }
 
 
-/*
-  Page elements
-*/
-
 const form =
-  document.getElementById(
-    "profileForm"
-  );
+  document.getElementById("profileForm");
 
 const message =
-  document.getElementById(
-    "profileMessage"
-  );
+  document.getElementById("profileMessage");
 
 
 /*
@@ -48,36 +34,36 @@ const {
 
 if (profileError) {
 
+  console.error(
+    "PROFILE LOAD ERROR:",
+    profileError
+  );
+
   message.textContent =
+    "Could not load profile: " +
     profileError.message;
 
 }
 
 
 /*
-  Helper function
+  Helper
 */
 
-function setValue(
-  id,
-  value
-) {
+function setValue(id, value) {
 
   const element =
     document.getElementById(id);
 
   if (element) {
-
-    element.value =
-      value ?? "";
-
+    element.value = value ?? "";
   }
 
 }
 
 
 /*
-  Populate existing information
+  Populate existing profile
 */
 
 if (profile) {
@@ -114,8 +100,7 @@ if (profile) {
 
   setValue(
     "nationality",
-    profile.nationality ||
-    "Nigerian"
+    profile.nationality || "Nigerian"
   );
 
   setValue(
@@ -217,7 +202,7 @@ if (profile) {
 
 
 /*
-  Display authenticated email
+  Email
 */
 
 setValue(
@@ -231,6 +216,9 @@ setValue(
 */
 
 const requiredFields = [
+
+  "firstName",
+  "surname",
 
   "dateOfBirth",
   "sex",
@@ -263,41 +251,7 @@ const requiredFields = [
 
 
 /*
-  Validate profile
-*/
-
-function validateProfile() {
-
-  for (
-    const fieldId
-    of requiredFields
-  ) {
-
-    const field =
-      document.getElementById(
-        fieldId
-      );
-
-    if (
-      !field ||
-      !field.value.trim()
-    ) {
-
-      field?.focus();
-
-      return false;
-
-    }
-
-  }
-
-  return true;
-
-}
-
-
-/*
-  Save profile
+  Submit profile
 */
 
 form.addEventListener(
@@ -307,227 +261,222 @@ form.addEventListener(
     event.preventDefault();
 
 
+    message.style.color =
+      "#c62828";
+
+    message.textContent =
+      "Checking your information...";
+
+
     /*
       Validate
     */
 
-    if (
-      !validateProfile()
+    for (
+      const fieldId
+      of requiredFields
     ) {
 
-      message.style.color =
-        "#c62828";
+      const field =
+        document.getElementById(
+          fieldId
+        );
 
-      message.textContent =
-        "Please complete all required fields before continuing.";
+      if (
+        !field ||
+        !field.value.trim()
+      ) {
 
-      return;
+        if (field) {
+          field.focus();
+        }
+
+        message.textContent =
+          "Please complete all required fields.";
+
+        return;
+
+      }
 
     }
 
 
     /*
-      Show saving message
+      Get values
     */
 
-    message.style.color =
-      "";
+    const firstName =
+      document
+        .getElementById("firstName")
+        .value
+        .trim();
+
+    const surname =
+      document
+        .getElementById("surname")
+        .value
+        .trim();
+
+    const newEmail =
+      document
+        .getElementById("email")
+        .value
+        .trim();
+
 
     message.textContent =
       "Saving profile...";
 
 
     /*
-      Build profile update
+      Update profile
     */
 
     const updates = {
 
+      first_name:
+        firstName,
+
+      surname:
+        surname,
+
       middle_name:
         document
-          .getElementById(
-            "middleName"
-          )
+          .getElementById("middleName")
           .value
           .trim(),
 
       date_of_birth:
         document
-          .getElementById(
-            "dateOfBirth"
-          )
+          .getElementById("dateOfBirth")
           .value || null,
 
       sex:
         document
-          .getElementById(
-            "sex"
-          )
+          .getElementById("sex")
           .value,
 
       religion:
         document
-          .getElementById(
-            "religion"
-          )
+          .getElementById("religion")
           .value,
 
       nationality:
         document
-          .getElementById(
-            "nationality"
-          )
+          .getElementById("nationality")
           .value
           .trim(),
 
       state_of_origin:
         document
-          .getElementById(
-            "stateOfOrigin"
-          )
+          .getElementById("stateOfOrigin")
           .value
           .trim(),
 
       lga:
         document
-          .getElementById(
-            "lga"
-          )
+          .getElementById("lga")
           .value
           .trim(),
 
       phone:
         document
-          .getElementById(
-            "phone"
-          )
+          .getElementById("phone")
           .value
           .trim(),
 
       address:
         document
-          .getElementById(
-            "address"
-          )
+          .getElementById("address")
           .value
           .trim(),
 
       contact_state:
         document
-          .getElementById(
-            "contactState"
-          )
+          .getElementById("contactState")
           .value
           .trim(),
 
       contact_lga:
         document
-          .getElementById(
-            "contactLga"
-          )
+          .getElementById("contactLga")
           .value
           .trim(),
 
       institution:
         document
-          .getElementById(
-            "institution"
-          )
+          .getElementById("institution")
           .value
           .trim(),
 
       faculty:
         document
-          .getElementById(
-            "faculty"
-          )
+          .getElementById("faculty")
           .value
           .trim(),
 
       department:
         document
-          .getElementById(
-            "department"
-          )
+          .getElementById("department")
           .value
           .trim(),
 
       programme:
         document
-          .getElementById(
-            "programme"
-          )
+          .getElementById("programme")
           .value
           .trim(),
 
       matric_number:
         document
-          .getElementById(
-            "matricNumber"
-          )
+          .getElementById("matricNumber")
           .value
           .trim(),
 
       degree:
         document
-          .getElementById(
-            "degree"
-          )
+          .getElementById("degree")
           .value
           .trim(),
 
       level:
         document
-          .getElementById(
-            "level"
-          )
+          .getElementById("level")
           .value,
 
       session:
         document
-          .getElementById(
-            "session"
-          )
+          .getElementById("session")
           .value
           .trim(),
 
       project_title:
         document
-          .getElementById(
-            "projectTitle"
-          )
+          .getElementById("projectTitle")
           .value
           .trim(),
 
       supervisor_name:
         document
-          .getElementById(
-            "supervisorName"
-          )
+          .getElementById("supervisorName")
           .value
           .trim(),
 
       supervisor_email:
         document
-          .getElementById(
-            "supervisorEmail"
-          )
+          .getElementById("supervisorEmail")
           .value
           .trim(),
 
       hod_name:
         document
-          .getElementById(
-            "hodName"
-          )
+          .getElementById("hodName")
           .value
           .trim(),
 
       hod_email:
         document
-          .getElementById(
-            "hodEmail"
-          )
+          .getElementById("hodEmail")
           .value
           .trim(),
 
@@ -538,7 +487,7 @@ form.addEventListener(
 
 
     /*
-      Update Supabase
+      Save profile
     */
 
     const {
@@ -549,22 +498,60 @@ form.addEventListener(
       .eq("id", user.id);
 
 
-    /*
-      Handle error
-    */
-
     if (error) {
 
-  console.error("PROFILE SAVE ERROR:", error);
+      console.error(
+        "PROFILE SAVE ERROR:",
+        error
+      );
 
-  message.style.color =
-    "#c62828";
+      message.style.color =
+        "#c62828";
 
-  message.textContent =
-    "Profile could not be saved: " +
-    error.message;
+      message.textContent =
+        "Profile could not be saved: " +
+        error.message;
 
-  return;
+      return;
+
+    }
+
+
+    /*
+      Update authentication email
+      only if it changed
+    */
+
+    if (
+      newEmail &&
+      newEmail !== user.email
+    ) {
+
+      const {
+        error: emailError
+      } = await supabase.auth
+        .updateUser({
+          email: newEmail
+        });
+
+
+      if (emailError) {
+
+        console.error(
+          "EMAIL UPDATE ERROR:",
+          emailError
+        );
+
+        message.style.color =
+          "#c62828";
+
+        message.textContent =
+          "Profile saved, but email update failed: " +
+          emailError.message;
+
+        return;
+
+      }
 
     }
 
@@ -581,15 +568,18 @@ form.addEventListener(
 
 
     /*
-  Return to registration summary
-*/
+      Go to registration summary
+    */
 
-setTimeout(
-  () => {
+    setTimeout(
+      () => {
 
-    window.location.href =
-      "registration-summary.html";
+        window.location.href =
+          "registration-summary.html";
 
-  },
-  1000
+      },
+      1000
+    );
+
+  }
 );
