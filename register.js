@@ -1,13 +1,9 @@
 import { supabase } from "./supabase.js";
 
-const form =
-  document.getElementById("registerForm");
-
-const message =
-  document.getElementById("registerMessage");
+const form = document.getElementById("registerForm");
+const message = document.getElementById("registerMessage");
 
 form.addEventListener("submit", async (event) => {
-
   event.preventDefault();
 
   message.textContent = "Creating your account...";
@@ -31,81 +27,43 @@ form.addEventListener("submit", async (event) => {
   const password =
     document.getElementById("password").value;
 
-
   try {
-
-    const {
-      data,
-      error
-    } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
-      password
-    });
+      password,
 
+      options: {
+        emailRedirectTo:
+          "https://bilonixtechnologies.github.io/web/",
+
+        data: {
+          first_name: firstName,
+          middle_name: middleName || null,
+          surname: surname,
+          phone: phone
+        }
+      }
+    });
 
     if (error) {
       throw error;
     }
 
-
     if (!data.user) {
-      throw new Error(
-        "Account was not created."
-      );
+      throw new Error("Account was not created.");
     }
-
-
-    /*
-      Create the student's profile.
-    */
-
-    const {
-      error: profileError
-    } = await supabase
-      .from("profiles")
-      .insert({
-        id: data.user.id,
-        first_name: firstName,
-        middle_name: middleName || null,
-        surname: surname,
-        email: email,
-        phone: phone
-      });
-
-
-    if (profileError) {
-      throw profileError;
-    }
-
 
     message.style.color = "#16824d";
 
     message.textContent =
-      "Account created successfully.";
-
-
-    /*
-      Continue to registration payment.
-    */
-
-    setTimeout(() => {
-
-      window.location.href =
-        "payment.html?type=registration";
-
-    }, 1000);
-
+      "Account created successfully. Please check your email to confirm your account.";
 
   } catch (error) {
-
     console.error(error);
 
     message.style.color = "#b33131";
 
     message.textContent =
-      error.message ||
-      "Something went wrong.";
-
+      error.message || "Something went wrong.";
   }
-
 });
