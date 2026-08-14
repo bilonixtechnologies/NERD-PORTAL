@@ -22,15 +22,20 @@ const message =
   Load existing profile
 */
 
+
 const {
-  data: profile,
-  error: profileError
+  error
 } = await supabase
   .from("profiles")
-  .select("*")
-  .eq("id", user.id)
-  .single();
-
+  .upsert(
+    {
+      id: user.id,
+      ...updates
+    },
+    {
+      onConflict: "id"
+    }
+  );
 
 if (profileError) {
 
