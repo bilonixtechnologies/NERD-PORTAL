@@ -644,3 +644,19 @@ textarea:focus {
   }
 
 }
+.forgot-password-link {
+  display: block;
+  margin: 10px 0 18px;
+  padding: 0;
+  background: none;
+  border: none;
+  box-shadow: none;
+  color: #16824d;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.forgot-password-link:hover {
+  text-decoration: underline;
+  background: none;
+}
