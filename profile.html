@@ -10,7 +10,7 @@
   content="width=device-width, initial-scale=1.0"
 >
 
-<title>NEDR | Student Profile</title>
+<title>NERD | Student Profile</title>
 
 <link
   rel="stylesheet"
@@ -29,11 +29,9 @@
   class="logo"
 >
 
-<span class="logo-box">
-N
-</span>
+<span class="logo-box">N</span>
 
-NEDR
+NERD 
 
 </a>
 
@@ -66,7 +64,7 @@ Clearance
 <div class="page-heading">
 
 <div class="eyebrow">
-STUDENT INFORMATION
+STUDENT REGISTRATION
 </div>
 
 <h1>
@@ -74,8 +72,9 @@ Complete your profile
 </h1>
 
 <p>
-All required information should be accurate
-before continuing to project submission.
+Provide accurate information. You must complete
+your required information before proceeding
+to registration payment.
 </p>
 
 </div>
@@ -84,23 +83,27 @@ before continuing to project submission.
 <form id="profileForm">
 
 
+<!-- =========================
+     PERSONAL INFORMATION
+========================= -->
+
 <section class="profile-section">
 
 <h2>
 Personal Information
 </h2>
 
-
 <div class="form-grid">
+
 
 <label>
 
 First Name
 
 <input
-type="text"
-id="firstName"
-readonly
+  type="text"
+  id="firstName"
+  readonly
 >
 
 </label>
@@ -111,8 +114,8 @@ readonly
 Middle Name
 
 <input
-type="text"
-id="middleName"
+  type="text"
+  id="middleName"
 >
 
 </label>
@@ -123,9 +126,9 @@ id="middleName"
 Surname
 
 <input
-type="text"
-id="surname"
-readonly
+  type="text"
+  id="surname"
+  readonly
 >
 
 </label>
@@ -133,11 +136,12 @@ readonly
 
 <label>
 
-Date of Birth
+Date of Birth *
 
 <input
-type="date"
-id="dateOfBirth"
+  type="date"
+  id="dateOfBirth"
+  required
 >
 
 </label>
@@ -145,9 +149,12 @@ id="dateOfBirth"
 
 <label>
 
-Sex
+Sex *
 
-<select id="sex">
+<select
+  id="sex"
+  required
+>
 
 <option value="">
 Select sex
@@ -168,9 +175,12 @@ Female
 
 <label>
 
-Religion
+Religion *
 
-<select id="religion">
+<select
+  id="religion"
+  required
+>
 
 <option value="">
 Select religion
@@ -199,12 +209,13 @@ Other
 
 <label>
 
-Nationality
+Nationality *
 
 <input
-type="text"
-id="nationality"
-value="Nigerian"
+  type="text"
+  id="nationality"
+  value="Nigerian"
+  required
 >
 
 </label>
@@ -212,11 +223,12 @@ value="Nigerian"
 
 <label>
 
-State of Origin
+State of Origin *
 
 <input
-type="text"
-id="stateOfOrigin"
+  type="text"
+  id="stateOfOrigin"
+  required
 >
 
 </label>
@@ -224,11 +236,12 @@ id="stateOfOrigin"
 
 <label>
 
-Local Government Area
+Local Government Area *
 
 <input
-type="text"
-id="lga"
+  type="text"
+  id="lga"
+  required
 >
 
 </label>
@@ -236,11 +249,12 @@ id="lga"
 
 <label>
 
-Phone Number
+Phone Number *
 
 <input
-type="tel"
-id="phone"
+  type="tel"
+  id="phone"
+  required
 >
 
 </label>
@@ -250,23 +264,96 @@ id="phone"
 </section>
 
 
+<!-- =========================
+     CONTACT INFORMATION
+========================= -->
+
+<section class="profile-section">
+
+<h2>
+Contact Information
+</h2>
+
+<div class="form-grid">
+
+
+<label>
+
+Email Address
+
+<input
+  type="email"
+  id="email"
+  readonly
+>
+
+</label>
+
+
+<label>
+
+Residential Address *
+
+<input
+  type="text"
+  id="address"
+  required
+>
+
+</label>
+
+
+<label>
+
+Contact State *
+
+<input
+  type="text"
+  id="contactState"
+  required
+>
+
+</label>
+
+
+<label>
+
+Contact LGA *
+
+<input
+  type="text"
+  id="contactLga"
+  required
+>
+
+</label>
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     ACADEMIC INFORMATION
+========================= -->
+
 <section class="profile-section">
 
 <h2>
 Academic Information
 </h2>
 
-
 <div class="form-grid">
 
+
 <label>
 
-Institution
+Institution *
 
 <input
-type="text"
-id="institution"
-required
+  type="text"
+  id="institution"
+  required
 >
 
 </label>
@@ -274,11 +361,12 @@ required
 
 <label>
 
-Faculty
+Faculty *
 
 <input
-type="text"
-id="faculty"
+  type="text"
+  id="faculty"
+  required
 >
 
 </label>
@@ -286,11 +374,12 @@ id="faculty"
 
 <label>
 
-Department
+Department *
 
 <input
-type="text"
-id="department"
+  type="text"
+  id="department"
+  required
 >
 
 </label>
@@ -298,12 +387,12 @@ id="department"
 
 <label>
 
-Programme
+Programme *
 
 <input
-type="text"
-id="programme"
-required
+  type="text"
+  id="programme"
+  required
 >
 
 </label>
@@ -312,11 +401,12 @@ required
 <label>
 
 Matriculation /
-Registration Number
+Registration Number *
 
 <input
-type="text"
-id="matricNumber"
+  type="text"
+  id="matricNumber"
+  required
 >
 
 </label>
@@ -324,11 +414,12 @@ id="matricNumber"
 
 <label>
 
-Degree
+Degree *
 
 <input
-type="text"
-id="degree"
+  type="text"
+  id="degree"
+  required
 >
 
 </label>
@@ -336,12 +427,137 @@ id="degree"
 
 <label>
 
-Academic Session
+Level *
+
+<select
+  id="level"
+  required
+>
+
+<option value="">
+Select level
+</option>
+
+<option value="100 Level">
+100 Level
+</option>
+
+<option value="200 Level">
+200 Level
+</option>
+
+<option value="300 Level">
+300 Level
+</option>
+
+<option value="400 Level">
+400 Level
+</option>
+
+<option value="500 Level">
+500 Level
+</option>
+
+<option value="Postgraduate">
+Postgraduate
+</option>
+
+</select>
+
+</label>
+
+
+<label>
+
+Academic Session *
 
 <input
-type="text"
-id="session"
-placeholder="2025/2026"
+  type="text"
+  id="session"
+  placeholder="2025/2026"
+  required
+>
+
+</label>
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     PROJECT INFORMATION
+========================= -->
+
+<section class="profile-section">
+
+<h2>
+Project Information
+</h2>
+
+<div class="form-grid">
+
+
+<label>
+
+Project Title *
+
+<input
+  type="text"
+  id="projectTitle"
+  required
+>
+
+</label>
+
+
+<label>
+
+Supervisor Name *
+
+<input
+  type="text"
+  id="supervisorName"
+  required
+>
+
+</label>
+
+
+<label>
+
+Supervisor Email *
+
+<input
+  type="email"
+  id="supervisorEmail"
+  required
+>
+
+</label>
+
+
+<label>
+
+HOD Name *
+
+<input
+  type="text"
+  id="hodName"
+  required
+>
+
+</label>
+
+
+<label>
+
+HOD Email *
+
+<input
+  type="email"
+  id="hodEmail"
+  required
 >
 
 </label>
@@ -352,8 +568,8 @@ placeholder="2025/2026"
 
 
 <button
-type="submit"
-class="primary-btn save-profile"
+  type="submit"
+  class="primary-btn save-profile"
 >
 
 Save & Continue
@@ -362,8 +578,8 @@ Save & Continue
 
 
 <p
-id="profileMessage"
-class="form-message"
+  id="profileMessage"
+  class="form-message"
 ></p>
 
 
@@ -373,8 +589,8 @@ class="form-message"
 
 
 <script
-type="module"
-src="profile.js"
+  type="module"
+  src="profile.js"
 ></script>
 
 </body>
