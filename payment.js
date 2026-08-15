@@ -20,7 +20,7 @@ const PAYSTACK_PUBLIC_KEY =
 
 
 /*
-  URL payment type
+  Payment type
 */
 
 const params =
@@ -58,11 +58,10 @@ const payButton =
 
 
 /*
-  Payment amount
+  Determine payment
 */
 
 let amount;
-
 let paymentType;
 
 if (type === "project") {
@@ -88,62 +87,17 @@ if (type === "project") {
 }
 
 
+/*
+  Display amount
+*/
+
 paymentAmount.textContent =
   "₦" +
   amount.toLocaleString();
 
 
 /*
-  Load Paystack
-*/
-
-function loadPaystack() {
-
-  return new Promise(
-    (resolve, reject) => {
-
-      if (window.PaystackPop) {
-
-        resolve();
-
-        return;
-      }
-
-
-      const script =
-        document.createElement(
-          "script"
-        );
-
-      script.src =
-  "https://js.paystack.co/v1/inline.js";
-
-
-      script.onload =
-        () => resolve();
-
-
-      script.onerror =
-        () =>
-          reject(
-            new Error(
-              "Unable to load Paystack."
-            )
-          );
-
-
-      document.head.appendChild(
-        script
-      );
-
-    }
-  );
-
-}
-
-
-/*
-  Start payment
+  Pay button
 */
 
 payButton.addEventListener(
@@ -152,7 +106,6 @@ payButton.addEventListener(
 
     payButton.disabled =
       true;
-
 
     paymentMessage.style.color =
       "#6b7280";
@@ -164,14 +117,24 @@ payButton.addEventListener(
     try {
 
       /*
-        Load Paystack
+        Make sure Paystack
+        library is available
       */
 
-      await loadPaystack();
+      if (
+        typeof PaystackPop ===
+        "undefined"
+      ) {
+
+        throw new Error(
+          "Paystack could not be loaded. Please refresh the page and try again."
+        );
+
+      }
 
 
       /*
-        Create unique reference
+        Generate unique reference
       */
 
       const reference =
@@ -186,7 +149,7 @@ payButton.addEventListener(
 
       /*
         Create pending payment
-        record first
+        record in Supabase
       */
 
       const {
@@ -196,23 +159,23 @@ payButton.addEventListener(
           .from("payments")
           .insert({
 
-          user_id:
-  user.id,
+            user_id:
+              user.id,
 
-payment_type:
-  paymentType,
+            payment_type:
+              paymentType,
 
-amount:
-  amount,
+            amount:
+              amount,
 
-status:
-  "pending",
+            status:
+              "pending",
 
-gateway:
-  "paystack",
+            gateway:
+              "paystack",
 
-reference:
-  reference
+            reference:
+              reference
 
           });
 
@@ -276,6 +239,10 @@ reference:
         },
 
 
+        /*
+          Payment completed
+        */
+
         onSuccess:
           function(transaction) {
 
@@ -286,16 +253,14 @@ reference:
 
 
             /*
-              IMPORTANT:
-              The browser callback is NOT
-              considered proof of payment.
+              Store reference temporarily.
+              This is NOT payment verification.
             */
 
             sessionStorage.setItem(
               "pendingPaymentReference",
               transaction.reference
             );
-
 
             sessionStorage.setItem(
               "pendingPaymentType",
@@ -311,9 +276,9 @@ reference:
 
 
             /*
-              Temporary destination.
-              We will replace this with
-              secure server-side verification.
+              Temporary success page.
+              Secure verification will be
+              connected next.
             */
 
             setTimeout(
@@ -328,6 +293,10 @@ reference:
 
           },
 
+
+        /*
+          Payment cancelled
+        */
 
         onCancel:
           function() {
