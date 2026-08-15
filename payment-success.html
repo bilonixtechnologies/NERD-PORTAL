@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
+
+<title>NEDR | Payment Successful</title>
+
+<link
+  rel="stylesheet"
+  href="style.css"
+>
+
+<style>
+
+.success-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 20px;
+}
+
+.success-card {
+  width: 100%;
+  max-width: 550px;
+  text-align: center;
+}
+
+.success-icon {
+  width: 70px;
+  height: 70px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  background: #006b3f;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 35px;
+  font-weight: 800;
+}
+
+.success-card h1 {
+  color: #006b3f;
+  margin-bottom: 12px;
+}
+
+.success-card p {
+  color: #6b7280;
+  line-height: 1.6;
+}
+
+.reference-box {
+  margin: 25px 0;
+  padding: 18px;
+  background: #f7faf8;
+  border: 1px solid #dfe4e8;
+  border-radius: 5px;
+}
+
+.reference-label {
+  display: block;
+  color: #6b7280;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.reference-value {
+  display: block;
+  color: #006b3f;
+  font-weight: 800;
+  word-break: break-word;
+}
+
+.success-message {
+  color: #c62828;
+  margin-top: 15px;
+}
+
+</style>
+
+</head>
+
+
+<body class="auth-page">
+
+
+<div class="success-page">
+
+  <div class="auth-card success-card">
+
+    <div class="success-icon">
+      ✓
+    </div>
+
+
+    <div class="eyebrow">
+      NEDR PAYMENT
+    </div>
+
+
+    <h1>
+      Payment Successful
+    </h1>
+
+
+    <p>
+      Your payment was successfully
+      submitted through Paystack.
+    </p>
+
+
+    <div class="reference-box">
+
+      <span class="reference-label">
+        Payment Reference
+      </span>
+
+      <span
+        class="reference-value"
+        id="paymentReference"
+      >
+        Loading...
+      </span>
+
+    </div>
+
+
+    <p>
+      Your payment is being verified.
+      Please wait while your registration
+      status is updated.
+    </p>
+
+
+    <p
+      id="successMessage"
+      class="success-message"
+    ></p>
+
+
+    <a
+      href="dashboard.html"
+      class="primary-btn"
+    >
+      Return to Dashboard
+    </a>
+
+  </div>
+
+</div>
+
+
+<script>
+
+const reference =
+  sessionStorage.getItem(
+    "pendingPaymentReference"
+  );
+
+
+const referenceElement =
+  document.getElementById(
+    "paymentReference"
+  );
+
+
+if (reference) {
+
+  referenceElement.textContent =
+    reference;
+
+} else {
+
+  referenceElement.textContent =
+    "Not available";
+
+}
+
+</script>
+
+
+</body>
+
+  </html>
