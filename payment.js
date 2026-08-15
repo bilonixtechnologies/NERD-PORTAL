@@ -116,7 +116,7 @@ function loadPaystack() {
         );
 
       script.src =
-        "https://js.paystack.co/v2/inline.js";
+  "https://js.paystack.co/v1/inline.js";
 
 
       script.onload =
