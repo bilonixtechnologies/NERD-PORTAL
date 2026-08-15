@@ -1,229 +1,96 @@
-import {
-  supabase,
-  requireUser
-} from "./supabase.js";
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
 
-const user = await requireUser();
+<meta charset="UTF-8">
 
-if (!user) {
-  throw new Error("Authentication required.");
-}
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
 
+<title>NEDR | Payment</title>
 
-const payButton =
-  document.getElementById("payButton");
+<link
+  rel="stylesheet"
+  href="style.css"
+>
 
-const paymentMessage =
-  document.getElementById("paymentMessage");
+</head>
 
 
-/*
-  Paystack TEST public key
-*/
+<body class="auth-page">
 
-const PAYSTACK_PUBLIC_KEY =
-  "pk_test_940a80df4e25871e462eaa19a35b8ce45b947b7e";
 
+<div class="auth-container">
 
-/*
-  Registration fee
-*/
+  <div class="auth-card">
 
-const REGISTRATION_AMOUNT =
-  2500;
+    <div class="eyebrow">
+      PAYMENT
+    </div>
 
 
-/*
-  Load Paystack checkout library
-*/
+    <h1 id="paymentTitle">
+      Registration Payment
+    </h1>
 
-function loadPaystack() {
 
-  return new Promise(
-    (resolve, reject) => {
+    <div class="payment-amount">
 
-      if (
-        window.PaystackPop
-      ) {
-        resolve();
-        return;
-      }
+      <span>
+        Amount Payable
+      </span>
 
+      <strong id="paymentAmount">
+        ₦2,500
+      </strong>
 
-      const script =
-        document.createElement("script");
+    </div>
 
-      script.src =
-        "https://js.paystack.co/v2/inline.js";
 
-      script.onload =
-        () => resolve();
+    <p>
+      Your payment must be successfully
+      verified before the next stage
+      becomes available.
+    </p>
 
-      script.onerror =
-        () =>
-          reject(
-            new Error(
-              "Could not load Paystack."
-            )
-          );
 
-      document.head.appendChild(
-        script
-      );
+    <button
+      id="payButton"
+      class="primary-btn full-btn"
+      type="button"
+    >
+      Continue to Payment
+    </button>
 
-    }
-  );
 
-}
+    <p
+      id="paymentMessage"
+      class="form-message"
+    ></p>
 
+  </div>
 
-/*
-  Start payment
-*/
+</div>
 
-payButton.addEventListener(
-  "click",
-  async () => {
 
-    payButton.disabled =
-      true;
+<!-- Paystack InlineJS -->
 
-    paymentMessage.style.color =
-      "#6b7280";
+<script
+  src="https://js.paystack.co/v2/inline.js"
+></script>
 
-    paymentMessage.textContent =
-      "Opening secure payment...";
 
+<!-- NEDR Payment Script -->
 
-    try {
+<script
+  type="module"
+  src="payment.js"
+></script>
 
-      await loadPaystack();
 
+</body>
 
-      const reference =
-        "NEDR-" +
-        Date.now() +
-        "-" +
-        crypto.randomUUID()
-          .substring(0, 8)
-          .toUpperCase();
-
-
-      const popup =
-        new PaystackPop();
-
-
-      popup.newTransaction({
-
-        key:
-          PAYSTACK_PUBLIC_KEY,
-
-        email:
-          user.email,
-
-        amount:
-          REGISTRATION_AMOUNT * 100,
-
-        currency:
-          "NGN",
-
-        reference:
-          reference,
-
-        metadata: {
-
-          user_id:
-            user.id,
-
-          payment_type:
-            "registration",
-
-          description:
-            "NEDR Student Registration Fee"
-
-        },
-
-
-        onSuccess:
-          function(transaction) {
-
-            console.log(
-              "PAYSTACK TEST PAYMENT:",
-              transaction
-            );
-
-
-            paymentMessage.style.color =
-              "#16824d";
-
-            paymentMessage.textContent =
-              "Payment received. Verifying...";
-
-
-            /*
-              IMPORTANT:
-              We will connect this callback
-              to secure server-side verification
-              next.
-            */
-
-            sessionStorage.setItem(
-              "pendingPaymentReference",
-              transaction.reference
-            );
-
-
-            setTimeout(
-              () => {
-
-                window.location.href =
-                  "payment-success.html";
-
-              },
-              1000
-            );
-
-          },
-
-
-        onCancel:
-          function() {
-
-            payButton.disabled =
-              false;
-
-            paymentMessage.style.color =
-              "#c62828";
-
-            paymentMessage.textContent =
-              "Payment was cancelled.";
-
-          }
-
-      });
-
-    }
-
-
-    catch (error) {
-
-      console.error(
-        "PAYMENT ERROR:",
-        error
-      );
-
-      payButton.disabled =
-        false;
-
-      paymentMessage.style.color =
-        "#c62828";
-
-      paymentMessage.textContent =
-        error.message ||
-        "Unable to start payment.";
-
-    }
-
-  }
-);
+</html>
