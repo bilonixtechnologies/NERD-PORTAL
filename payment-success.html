@@ -54,23 +54,32 @@
     >
 
       <strong>
-        Payment Reference
+        Payment Type
+      </strong>
+
+      <p id="paymentType">
+        —
+      </p>
+
+
+      <strong>
+        Amount
+      </strong>
+
+      <p id="paymentAmount">
+        —
+      </p>
+
+
+      <strong>
+        Reference
       </strong>
 
       <p
         id="paymentReference"
         style="word-break:break-all;"
       >
-        —
-      </p>
-
-
-      <strong>
-        Payment Type
-      </strong>
-
-      <p id="paymentType">
-        —
+        Finding payment...
       </p>
 
 
@@ -89,7 +98,7 @@
       id="statusMessage"
       class="form-message"
     >
-      Connecting to verification service...
+      Finding your payment transaction...
     </p>
 
 
@@ -135,6 +144,10 @@ import {
 } from "./supabase.js";
 
 
+/*
+  Require logged-in user
+*/
+
 const user =
   await requireUser();
 
@@ -147,6 +160,10 @@ if (!user) {
 
 }
 
+
+/*
+  Page elements
+*/
 
 const statusTitle =
   document.getElementById(
@@ -163,17 +180,22 @@ const statusMessage =
     "statusMessage"
   );
 
-const paymentReference =
-  document.getElementById(
-    "paymentReference"
-  );
-
 const paymentTypeElement =
   document.getElementById(
     "paymentType"
   );
 
-const paymentStatus =
+const paymentAmountElement =
+  document.getElementById(
+    "paymentAmount"
+  );
+
+const paymentReferenceElement =
+  document.getElementById(
+    "paymentReference"
+  );
+
+const paymentStatusElement =
   document.getElementById(
     "paymentStatus"
   );
@@ -190,7 +212,7 @@ const errorArea =
 
 
 /*
-  READ REFERENCE DIRECTLY FROM URL
+  Get payment type from URL
 */
 
 const params =
@@ -199,77 +221,169 @@ const params =
   );
 
 
-const reference =
-  params.get(
-    "reference"
-  );
-
-
-const paymentType =
-  params.get(
-    "type"
-  );
+const requestedType =
+  params.get("type");
 
 
 /*
-  Display payment information
+  Find latest pending payment
 */
 
-paymentReference.textContent =
-  reference ||
-  "Missing";
-
-
-paymentTypeElement.textContent =
-  paymentType ===
-  "project_upload"
-
-    ? "Project Upload"
-
-    : "Registration";
-
-
-/*
-  No reference
-*/
-
-if (!reference) {
-
-  statusTitle.textContent =
-    "Payment Reference Missing";
-
-  statusDescription.textContent =
-    "No Paystack transaction reference was supplied.";
-
-  statusMessage.style.color =
-    "#c62828";
+async function findPendingPayment() {
 
   statusMessage.textContent =
-    "Please return to the payment page.";
+    "Finding your pending payment...";
 
-  paymentStatus.textContent =
-    "NOT VERIFIED";
 
-  errorArea.style.display =
-    "block";
+  let query =
+    supabase
+      .from("payments")
+      .select(
+        "id, user_id, payment_type, amount, status, gateway, reference, created_at"
+      )
+      .eq(
+        "user_id",
+        user.id
+      )
+      .eq(
+        "status",
+        "pending"
+      )
+      .eq(
+        "gateway",
+        "paystack"
+      );
+
+
+  /*
+    If payment type is known,
+    use it.
+  */
+
+  if (
+    requestedType ===
+    "project"
+  ) {
+
+    query =
+      query.eq(
+        "payment_type",
+        "project_upload"
+      );
+
+  } else {
+
+    query =
+      query.eq(
+        "payment_type",
+        "registration"
+      );
+
+  }
+
+
+  const {
+    data,
+    error
+  } =
+    await query
+      .order(
+        "created_at",
+        {
+          ascending: false
+        }
+      )
+      .limit(1)
+      .maybeSingle();
+
+
+  if (error) {
+
+    console.error(
+      "PAYMENT LOOKUP ERROR:",
+      error
+    );
+
+    throw new Error(
+      error.message
+    );
+
+  }
+
+
+  return data;
 
 }
 
 
 /*
-  Reference exists
+  Verify payment
 */
 
-else {
+async function verifyPayment() {
 
   try {
 
-    statusMessage.textContent =
-      "Verifying transaction with Paystack...";
+    const payment =
+      await findPendingPayment();
 
 
     /*
-      Call Edge Function
+      No pending payment found
+    */
+
+    if (!payment) {
+
+      throw new Error(
+        "No pending Paystack payment was found for this account."
+      );
+
+    }
+
+
+    /*
+      Make sure reference exists
+    */
+
+    if (!payment.reference) {
+
+      throw new Error(
+        "The payment record does not contain a transaction reference."
+      );
+
+    }
+
+
+    /*
+      Display payment details
+    */
+
+    paymentReferenceElement.textContent =
+      payment.reference;
+
+
+    paymentTypeElement.textContent =
+      payment.payment_type ===
+      "project_upload"
+
+        ? "Project Upload"
+
+        : "Registration";
+
+
+    paymentAmountElement.textContent =
+      "₦" +
+      Number(
+        payment.amount
+      ).toLocaleString();
+
+
+    statusMessage.textContent =
+      "Sending transaction reference for secure verification...";
+
+
+    /*
+      Call deployed Edge Function
     */
 
     const {
@@ -283,7 +397,7 @@ else {
           body: {
 
             reference:
-              reference
+              payment.reference
 
           }
 
@@ -292,26 +406,34 @@ else {
 
 
     console.log(
-      "VERIFICATION DATA:",
+      "VERIFY PAYMENT RESULT:",
       data
     );
 
 
     console.log(
-      "VERIFICATION ERROR:",
+      "VERIFY PAYMENT ERROR:",
       error
     );
 
+
+    /*
+      Edge Function communication error
+    */
 
     if (error) {
 
       throw new Error(
         error.message ||
-        "Verification service failed."
+        "Unable to contact the payment verification service."
       );
 
     }
 
+
+    /*
+      Verification failed
+    */
 
     if (
       !data ||
@@ -320,7 +442,7 @@ else {
 
       throw new Error(
         data?.message ||
-        "Payment could not be verified."
+        "Paystack could not verify this transaction."
       );
 
     }
@@ -330,10 +452,10 @@ else {
       SUCCESS
     */
 
-    paymentStatus.textContent =
+    paymentStatusElement.textContent =
       "PAID";
 
-    paymentStatus.style.color =
+    paymentStatusElement.style.color =
       "#16824d";
 
 
@@ -342,7 +464,7 @@ else {
 
 
     statusDescription.textContent =
-      "Your NEDR payment has been successfully verified.";
+      "Your NEDR payment has been successfully verified and recorded.";
 
 
     statusMessage.style.color =
@@ -359,15 +481,15 @@ else {
   } catch (error) {
 
     console.error(
-      "VERIFICATION ERROR:",
+      "PAYMENT VERIFICATION ERROR:",
       error
     );
 
 
-    paymentStatus.textContent =
+    paymentStatusElement.textContent =
       "NOT VERIFIED";
 
-    paymentStatus.style.color =
+    paymentStatusElement.style.color =
       "#c62828";
 
 
@@ -376,7 +498,7 @@ else {
 
 
     statusDescription.textContent =
-      "We could not verify the Paystack transaction.";
+      "We could not verify the payment automatically.";
 
 
     statusMessage.style.color =
@@ -384,7 +506,7 @@ else {
 
     statusMessage.textContent =
       error.message ||
-      "Verification failed.";
+      "Payment verification failed.";
 
 
     errorArea.style.display =
@@ -393,6 +515,13 @@ else {
   }
 
 }
+
+
+/*
+  Start verification
+*/
+
+verifyPayment();
 
 </script>
 
