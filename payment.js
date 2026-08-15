@@ -4,21 +4,17 @@ import {
 } from "./supabase.js";
 
 
-/*
-  Require logged-in user
-*/
+const user =
+  await requireUser();
 
-const user = await requireUser();
 
 if (!user) {
-  throw new Error(
-    "Authentication required."
-  );
+  throw new Error("Authentication required.");
 }
 
 
 /*
-  Paystack TEST public key
+  Paystack TEST PUBLIC KEY
 */
 
 const PAYSTACK_PUBLIC_KEY =
@@ -26,7 +22,7 @@ const PAYSTACK_PUBLIC_KEY =
 
 
 /*
-  Read payment type
+  Payment type
 */
 
 const params =
@@ -64,13 +60,11 @@ const payButton =
 
 
 /*
-  Determine payment type
+  Determine payment
 */
 
 let amount;
-
 let paymentType;
-
 
 if (type === "project") {
 
@@ -95,36 +89,18 @@ if (type === "project") {
 }
 
 
-/*
-  Display amount
-*/
-
 paymentAmount.textContent =
   "₦" +
   amount.toLocaleString();
 
 
 /*
-  Check Paystack
-*/
-
-function isPaystackReady() {
-
-  return (
-    typeof window.PaystackPop !==
-    "undefined"
-  );
-
-}
-
-
-/*
-  Start payment
+  Start Paystack
 */
 
 payButton.addEventListener(
   "click",
-  async function () {
+  async () => {
 
     payButton.disabled =
       true;
@@ -133,31 +109,29 @@ payButton.addEventListener(
       "#6b7280";
 
     paymentMessage.textContent =
-      "Preparing payment...";
+      "Preparing secure payment...";
 
 
     try {
 
-
       /*
-        Make sure Paystack
-        has loaded
+        Check Paystack library
       */
 
       if (
-        !isPaystackReady()
+        typeof PaystackPop ===
+        "undefined"
       ) {
 
         throw new Error(
-          "Paystack is still loading. Please refresh the page and try again."
+          "Paystack could not be loaded. Please refresh the page."
         );
 
       }
 
 
       /*
-        Generate unique
-        payment reference
+        Generate reference
       */
 
       const reference =
@@ -166,21 +140,16 @@ payButton.addEventListener(
         "-" +
         crypto
           .randomUUID()
-          .substring(
-            0,
-            8
-          )
+          .substring(0, 8)
           .toUpperCase();
 
 
       /*
         Create pending payment
-        in Supabase
       */
 
       const {
-        error:
-          paymentError
+        error: insertError
       } =
         await supabase
           .from("payments")
@@ -207,15 +176,10 @@ payButton.addEventListener(
           });
 
 
-      if (paymentError) {
-
-        console.error(
-          "PAYMENT DATABASE ERROR:",
-          paymentError
-        );
+      if (insertError) {
 
         throw new Error(
-          paymentError.message
+          insertError.message
         );
 
       }
@@ -225,15 +189,8 @@ payButton.addEventListener(
         Open Paystack
       */
 
-      paymentMessage.style.color =
-        "#6b7280";
-
-      paymentMessage.textContent =
-        "Opening secure Paystack checkout...";
-
-
       const popup =
-        new window.PaystackPop();
+        new PaystackPop();
 
 
       popup.newTransaction({
@@ -274,28 +231,22 @@ payButton.addEventListener(
 
 
         /*
-          Paystack success callback
+          Paystack success
         */
 
         onSuccess:
-          function (transaction) {
-
-            console.log(
-              "PAYSTACK TRANSACTION:",
-              transaction
-            );
-
+          function(transaction) {
 
             /*
-              Save reference temporarily.
-              This does NOT verify payment.
+              Save BOTH the Paystack
+              reference and payment type.
             */
 
             sessionStorage.setItem(
               "pendingPaymentReference",
-              transaction.reference
+              transaction.reference ||
+              reference
             );
-
 
             sessionStorage.setItem(
               "pendingPaymentType",
@@ -307,34 +258,27 @@ payButton.addEventListener(
               "#16824d";
 
             paymentMessage.textContent =
-              "Payment received. Verifying payment...";
+              "Payment successful. Verifying...";
 
 
             /*
-              Temporary redirect.
-              Secure verification will be
-              connected next.
+              Go directly to
+              verification page.
             */
 
-            setTimeout(
-              function () {
-
-                window.location.href =
-                  "payment-success.html";
-
-              },
-              1000
+            window.location.replace(
+              "payment-success.html"
             );
 
           },
 
 
         /*
-          Payment cancelled
+          Cancelled
         */
 
         onCancel:
-          function () {
+          function() {
 
             payButton.disabled =
               false;
@@ -349,10 +293,8 @@ payButton.addEventListener(
 
       });
 
-    }
 
-
-    catch (error) {
+    } catch (error) {
 
       console.error(
         "PAYMENT ERROR:",
