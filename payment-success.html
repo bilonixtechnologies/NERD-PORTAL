@@ -29,13 +29,13 @@
 
 .success-card {
   width: 100%;
-  max-width: 550px;
+  max-width: 560px;
   text-align: center;
 }
 
 .status-icon {
-  width: 70px;
-  height: 70px;
+  width: 72px;
+  height: 72px;
   margin: 0 auto 20px;
   border-radius: 50%;
   background: #006b3f;
@@ -43,20 +43,20 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 35px;
+  font-size: 36px;
   font-weight: 800;
 }
 
-.status-icon.failed {
+.status-icon.error {
   background: #c62828;
 }
 
 .success-card h1 {
   color: #006b3f;
-  margin-bottom: 12px;
+  margin: 10px 0;
 }
 
-.success-card h1.failed {
+.success-card h1.error {
   color: #c62828;
 }
 
@@ -65,32 +65,41 @@
   line-height: 1.6;
 }
 
-.reference-box {
-  margin: 25px 0;
-  padding: 18px;
-  background: #f7faf8;
+.payment-details {
+  margin-top: 25px;
   border: 1px solid #dfe4e8;
-  border-radius: 5px;
+  background: #f7faf8;
+  text-align: left;
 }
 
-.reference-label {
-  display: block;
+.payment-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 13px 16px;
+  border-bottom: 1px solid #dfe4e8;
+}
+
+.payment-row:last-child {
+  border-bottom: 0;
+}
+
+.payment-label {
   color: #6b7280;
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
-  margin-bottom: 6px;
 }
 
-.reference-value {
-  display: block;
-  color: #006b3f;
-  font-weight: 800;
+.payment-value {
+  color: #1f2937;
+  font-weight: 700;
+  text-align: right;
   word-break: break-word;
 }
 
-.message {
-  margin: 20px 0;
+.status-message {
+  margin-top: 22px;
   font-weight: 600;
 }
 
@@ -110,11 +119,12 @@
 
   <div class="auth-card success-card">
 
+
     <div
       id="statusIcon"
       class="status-icon"
     >
-      ✓
+      ...
     </div>
 
 
@@ -124,7 +134,7 @@
 
 
     <h1 id="statusTitle">
-      Verifying Payment...
+      Verifying Payment
     </h1>
 
 
@@ -134,27 +144,81 @@
     </p>
 
 
-    <div class="reference-box">
+    <div class="payment-details">
 
-      <span class="reference-label">
-        Payment Reference
-      </span>
 
-      <span
-        class="reference-value"
-        id="paymentReference"
-      >
-        Loading...
-      </span>
+      <div class="payment-row">
+
+        <span class="payment-label">
+          Payment Type
+        </span>
+
+        <span
+          class="payment-value"
+          id="paymentType"
+        >
+          —
+        </span>
+
+      </div>
+
+
+      <div class="payment-row">
+
+        <span class="payment-label">
+          Amount
+        </span>
+
+        <span
+          class="payment-value"
+          id="paymentAmount"
+        >
+          —
+        </span>
+
+      </div>
+
+
+      <div class="payment-row">
+
+        <span class="payment-label">
+          Reference
+        </span>
+
+        <span
+          class="payment-value"
+          id="paymentReference"
+        >
+          —
+        </span>
+
+      </div>
+
+
+      <div class="payment-row">
+
+        <span class="payment-label">
+          Status
+        </span>
+
+        <span
+          class="payment-value"
+          id="paymentStatus"
+        >
+          Verifying...
+        </span>
+
+      </div>
+
 
     </div>
 
 
     <p
       id="statusMessage"
-      class="message"
+      class="status-message"
     >
-      Connecting to payment verification...
+      Connecting to NEDR payment verification...
     </p>
 
 
@@ -173,6 +237,7 @@
 
     </div>
 
+
   </div>
 
 </div>
@@ -186,6 +251,10 @@ import {
 } from "./supabase.js";
 
 
+/*
+  Require authenticated student
+*/
+
 const user =
   await requireUser();
 
@@ -198,6 +267,10 @@ if (!user) {
 
 }
 
+
+/*
+  Page elements
+*/
 
 const statusIcon =
   document.getElementById(
@@ -214,14 +287,29 @@ const statusDescription =
     "statusDescription"
   );
 
-const paymentReference =
+const statusMessage =
+  document.getElementById(
+    "statusMessage"
+  );
+
+const paymentTypeElement =
+  document.getElementById(
+    "paymentType"
+  );
+
+const paymentAmountElement =
+  document.getElementById(
+    "paymentAmount"
+  );
+
+const paymentReferenceElement =
   document.getElementById(
     "paymentReference"
   );
 
-const statusMessage =
+const paymentStatusElement =
   document.getElementById(
-    "statusMessage"
+    "paymentStatus"
   );
 
 const buttonArea =
@@ -230,11 +318,15 @@ const buttonArea =
   );
 
 
+/*
+  Get payment information
+  saved before Paystack opened
+*/
+
 const reference =
   sessionStorage.getItem(
     "pendingPaymentReference"
   );
-
 
 const paymentType =
   sessionStorage.getItem(
@@ -242,36 +334,67 @@ const paymentType =
   );
 
 
-if (!reference) {
+/*
+  Display payment type
+*/
 
-  statusIcon.textContent =
-    "!";
+if (
+  paymentType ===
+  "project_upload"
+) {
 
-  statusIcon.classList.add(
-    "failed"
-  );
+  paymentTypeElement.textContent =
+    "Project Upload";
 
-  statusTitle.textContent =
-    "Payment Reference Missing";
-
-  statusTitle.classList.add(
-    "failed"
-  );
-
-  statusDescription.textContent =
-    "We could not find the payment reference required for verification.";
-
-  statusMessage.textContent =
-    "Please return to the payment page and try again.";
-
-  buttonArea.style.display =
-    "block";
+  paymentAmountElement.textContent =
+    "₦4,850";
 
 } else {
 
-  paymentReference.textContent =
+  paymentTypeElement.textContent =
+    "Registration";
+
+  paymentAmountElement.textContent =
+    "₦2,500";
+
+}
+
+
+/*
+  Display reference
+*/
+
+if (reference) {
+
+  paymentReferenceElement.textContent =
     reference;
 
+}
+
+
+/*
+  Missing reference
+*/
+
+if (!reference) {
+
+  showError(
+    "Payment Reference Missing",
+    "We could not find the payment reference required to verify this transaction."
+  );
+
+} else {
+
+  verifyPayment();
+
+}
+
+
+/*
+  Verify payment
+*/
+
+async function verifyPayment() {
 
   try {
 
@@ -280,51 +403,61 @@ if (!reference) {
 
 
     /*
-      IMPORTANT:
-      Your actual Supabase Edge Function
-      is named smooth-api.
+      Call the deployed
+      verify-payment Edge Function
     */
 
-    const {
-      data,
-      error
-    } =
+    const result =
       await supabase.functions.invoke(
-        "smooth-api",
+        "verify-payment",
         {
+
           body: {
 
             reference:
-              reference,
-
-            payment_type:
-              paymentType
+              reference
 
           }
+
         }
       );
 
 
+    const data =
+      result.data;
+
+    const error =
+      result.error;
+
+
     console.log(
-      "VERIFICATION RESULT:",
+      "VERIFY PAYMENT DATA:",
       data
     );
 
+    console.log(
+      "VERIFY PAYMENT ERROR:",
+      error
+    );
+
+
+    /*
+      Edge Function error
+    */
 
     if (error) {
 
-      console.error(
-        "EDGE FUNCTION ERROR:",
-        error
-      );
-
       throw new Error(
         error.message ||
-        "Unable to contact payment verification service."
+        "Unable to contact the payment verification service."
       );
 
     }
 
+
+    /*
+      Verification failed
+    */
 
     if (
       !data ||
@@ -333,45 +466,58 @@ if (!reference) {
 
       throw new Error(
         data?.message ||
-        "Payment could not be verified."
+        "Paystack could not verify this payment."
       );
 
     }
 
 
     /*
-      SUCCESS
+      PAYMENT VERIFIED
     */
+
+    paymentStatusElement.textContent =
+      "PAID";
+
+    paymentStatusElement.style.color =
+      "#16824d";
+
 
     statusIcon.textContent =
       "✓";
 
     statusIcon.classList.remove(
-      "failed"
+      "error"
     );
 
-    statusTitle.classList.remove(
-      "failed"
-    );
 
     statusTitle.textContent =
       "Payment Verified Successfully";
 
+    statusTitle.classList.remove(
+      "error"
+    );
+
+
     statusDescription.textContent =
       "Your NEDR payment has been successfully verified.";
+
 
     statusMessage.style.color =
       "#16824d";
 
     statusMessage.textContent =
-      "Payment status: PAID";
+      "Your payment has been recorded successfully.";
+
 
     buttonArea.style.display =
       "block";
 
 
     /*
-      Clear temporary data
+      Clear temporary payment
+      information only after
+      successful verification.
     */
 
     sessionStorage.removeItem(
@@ -391,29 +537,44 @@ if (!reference) {
     );
 
 
+    /*
+      PAYMENT VERIFICATION FAILED
+    */
+
+    paymentStatusElement.textContent =
+      "NOT VERIFIED";
+
+    paymentStatusElement.style.color =
+      "#c62828";
+
+
     statusIcon.textContent =
       "!";
 
     statusIcon.classList.add(
-      "failed"
+      "error"
     );
 
-    statusTitle.classList.add(
-      "failed"
-    );
 
     statusTitle.textContent =
       "Payment Verification Failed";
 
+    statusTitle.classList.add(
+      "error"
+    );
+
+
     statusDescription.textContent =
-      "Your payment was completed, but we could not verify it automatically.";
+      "Your payment may have been completed, but NEDR could not verify it automatically.";
+
 
     statusMessage.style.color =
       "#c62828";
 
     statusMessage.textContent =
       error.message ||
-      "Please try again.";
+      "Please return to the payment page and try again.";
+
 
     buttonArea.style.display =
       "block";
@@ -422,9 +583,58 @@ if (!reference) {
 
 }
 
+
+/*
+  Error display
+*/
+
+function showError(
+  title,
+  message
+) {
+
+  paymentStatusElement.textContent =
+    "ERROR";
+
+  paymentStatusElement.style.color =
+    "#c62828";
+
+
+  statusIcon.textContent =
+    "!";
+
+  statusIcon.classList.add(
+    "error"
+  );
+
+
+  statusTitle.textContent =
+    title;
+
+  statusTitle.classList.add(
+    "error"
+  );
+
+
+  statusDescription.textContent =
+    message;
+
+
+  statusMessage.style.color =
+    "#c62828";
+
+  statusMessage.textContent =
+    "No payment verification was completed.";
+
+
+  buttonArea.style.display =
+    "block";
+
+}
+
 </script>
 
 
 </body>
 
-</html>
+  </html>
