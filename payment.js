@@ -95,15 +95,14 @@ paymentAmount.textContent =
 
 
 /*
-  Start Paystack
+  Start payment
 */
 
 payButton.addEventListener(
   "click",
   async () => {
 
-    payButton.disabled =
-      true;
+    payButton.disabled = true;
 
     paymentMessage.style.color =
       "#6b7280";
@@ -115,7 +114,7 @@ payButton.addEventListener(
     try {
 
       /*
-        Check Paystack library
+        Make sure Paystack is loaded
       */
 
       if (
@@ -131,7 +130,7 @@ payButton.addEventListener(
 
 
       /*
-        Generate reference
+        Create unique reference
       */
 
       const reference =
@@ -237,21 +236,27 @@ payButton.addEventListener(
         onSuccess:
           function(transaction) {
 
+            const finalReference =
+              transaction.reference ||
+              reference;
+
+
             /*
-              Save BOTH the Paystack
-              reference and payment type.
+              IMPORTANT:
+              Put the reference directly
+              in the URL.
             */
 
-            sessionStorage.setItem(
-              "pendingPaymentReference",
-              transaction.reference ||
-              reference
-            );
-
-            sessionStorage.setItem(
-              "pendingPaymentType",
-              paymentType
-            );
+            const verificationUrl =
+              "payment-success.html" +
+              "?reference=" +
+              encodeURIComponent(
+                finalReference
+              ) +
+              "&type=" +
+              encodeURIComponent(
+                paymentType
+              );
 
 
             paymentMessage.style.color =
@@ -262,19 +267,18 @@ payButton.addEventListener(
 
 
             /*
-              Go directly to
-              verification page.
+              Go to verification page
+              with the reference attached.
             */
 
-            window.location.replace(
-              "payment-success.html"
-            );
+            window.location.href =
+              verificationUrl;
 
           },
 
 
         /*
-          Cancelled
+          Payment cancelled
         */
 
         onCancel:
