@@ -17,116 +17,15 @@
   href="style.css"
 >
 
-<style>
-
-.success-page {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 30px 20px;
-}
-
-.success-card {
-  width: 100%;
-  max-width: 560px;
-  text-align: center;
-}
-
-.status-icon {
-  width: 72px;
-  height: 72px;
-  margin: 0 auto 20px;
-  border-radius: 50%;
-  background: #006b3f;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 36px;
-  font-weight: 800;
-}
-
-.status-icon.error {
-  background: #c62828;
-}
-
-.success-card h1 {
-  color: #006b3f;
-  margin: 10px 0;
-}
-
-.success-card h1.error {
-  color: #c62828;
-}
-
-.success-card p {
-  color: #6b7280;
-  line-height: 1.6;
-}
-
-.payment-details {
-  margin-top: 25px;
-  border: 1px solid #dfe4e8;
-  background: #f7faf8;
-  text-align: left;
-}
-
-.payment-row {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  padding: 13px 16px;
-  border-bottom: 1px solid #dfe4e8;
-}
-
-.payment-row:last-child {
-  border-bottom: 0;
-}
-
-.payment-label {
-  color: #6b7280;
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-}
-
-.payment-value {
-  color: #1f2937;
-  font-weight: 700;
-  text-align: right;
-  word-break: break-word;
-}
-
-.status-message {
-  margin-top: 22px;
-  font-weight: 600;
-}
-
-.button-area {
-  margin-top: 25px;
-}
-
-</style>
-
 </head>
 
 
 <body class="auth-page">
 
 
-<div class="success-page">
+<div class="auth-container">
 
-  <div class="auth-card success-card">
-
-
-    <div
-      id="statusIcon"
-      class="status-icon"
-    >
-      ...
-    </div>
-
+  <div class="auth-card">
 
     <div class="eyebrow">
       NEDR PAYMENT
@@ -140,103 +39,88 @@
 
     <p id="statusDescription">
       Please wait while we securely verify
-      your payment with Paystack.
+      your payment.
     </p>
 
 
-    <div class="payment-details">
+    <div
+      style="
+        margin-top:20px;
+        padding:18px;
+        background:#f7faf8;
+        border:1px solid #dfe4e8;
+        text-align:left;
+      "
+    >
+
+      <strong>
+        Payment Reference
+      </strong>
+
+      <p
+        id="paymentReference"
+        style="word-break:break-all;"
+      >
+        —
+      </p>
 
 
-      <div class="payment-row">
+      <strong>
+        Payment Type
+      </strong>
 
-        <span class="payment-label">
-          Payment Type
-        </span>
-
-        <span
-          class="payment-value"
-          id="paymentType"
-        >
-          —
-        </span>
-
-      </div>
+      <p id="paymentType">
+        —
+      </p>
 
 
-      <div class="payment-row">
+      <strong>
+        Status
+      </strong>
 
-        <span class="payment-label">
-          Amount
-        </span>
-
-        <span
-          class="payment-value"
-          id="paymentAmount"
-        >
-          —
-        </span>
-
-      </div>
-
-
-      <div class="payment-row">
-
-        <span class="payment-label">
-          Reference
-        </span>
-
-        <span
-          class="payment-value"
-          id="paymentReference"
-        >
-          —
-        </span>
-
-      </div>
-
-
-      <div class="payment-row">
-
-        <span class="payment-label">
-          Status
-        </span>
-
-        <span
-          class="payment-value"
-          id="paymentStatus"
-        >
-          Verifying...
-        </span>
-
-      </div>
-
+      <p id="paymentStatus">
+        VERIFYING
+      </p>
 
     </div>
 
 
     <p
       id="statusMessage"
-      class="status-message"
+      class="form-message"
     >
-      Connecting to NEDR payment verification...
+      Connecting to verification service...
     </p>
 
 
     <div
-      id="buttonArea"
-      class="button-area"
+      id="successArea"
       style="display:none;"
     >
 
       <a
         href="dashboard.html"
-        class="primary-btn"
+        class="primary-btn full-btn"
       >
-        Return to Dashboard
+        Continue
       </a>
 
     </div>
 
+
+    <div
+      id="errorArea"
+      style="display:none;"
+    >
+
+      <a
+        href="payment.html?type=registration"
+        class="primary-btn full-btn"
+      >
+        Return to Payment
+      </a>
+
+    </div>
 
   </div>
 
@@ -251,10 +135,6 @@ import {
 } from "./supabase.js";
 
 
-/*
-  Require authenticated student
-*/
-
 const user =
   await requireUser();
 
@@ -267,15 +147,6 @@ if (!user) {
 
 }
 
-
-/*
-  Page elements
-*/
-
-const statusIcon =
-  document.getElementById(
-    "statusIcon"
-  );
 
 const statusTitle =
   document.getElementById(
@@ -292,109 +163,104 @@ const statusMessage =
     "statusMessage"
   );
 
+const paymentReference =
+  document.getElementById(
+    "paymentReference"
+  );
+
 const paymentTypeElement =
   document.getElementById(
     "paymentType"
   );
 
-const paymentAmountElement =
-  document.getElementById(
-    "paymentAmount"
-  );
-
-const paymentReferenceElement =
-  document.getElementById(
-    "paymentReference"
-  );
-
-const paymentStatusElement =
+const paymentStatus =
   document.getElementById(
     "paymentStatus"
   );
 
-const buttonArea =
+const successArea =
   document.getElementById(
-    "buttonArea"
+    "successArea"
+  );
+
+const errorArea =
+  document.getElementById(
+    "errorArea"
   );
 
 
 /*
-  Get payment information
-  saved before Paystack opened
+  READ REFERENCE DIRECTLY FROM URL
 */
+
+const params =
+  new URLSearchParams(
+    window.location.search
+  );
+
 
 const reference =
-  sessionStorage.getItem(
-    "pendingPaymentReference"
+  params.get(
+    "reference"
   );
+
 
 const paymentType =
-  sessionStorage.getItem(
-    "pendingPaymentType"
+  params.get(
+    "type"
   );
 
 
 /*
-  Display payment type
+  Display payment information
 */
 
-if (
+paymentReference.textContent =
+  reference ||
+  "Missing";
+
+
+paymentTypeElement.textContent =
   paymentType ===
   "project_upload"
-) {
 
-  paymentTypeElement.textContent =
-    "Project Upload";
+    ? "Project Upload"
 
-  paymentAmountElement.textContent =
-    "₦4,850";
-
-} else {
-
-  paymentTypeElement.textContent =
-    "Registration";
-
-  paymentAmountElement.textContent =
-    "₦2,500";
-
-}
+    : "Registration";
 
 
 /*
-  Display reference
-*/
-
-if (reference) {
-
-  paymentReferenceElement.textContent =
-    reference;
-
-}
-
-
-/*
-  Missing reference
+  No reference
 */
 
 if (!reference) {
 
-  showError(
-    "Payment Reference Missing",
-    "We could not find the payment reference required to verify this transaction."
-  );
+  statusTitle.textContent =
+    "Payment Reference Missing";
 
-} else {
+  statusDescription.textContent =
+    "No Paystack transaction reference was supplied.";
 
-  verifyPayment();
+  statusMessage.style.color =
+    "#c62828";
+
+  statusMessage.textContent =
+    "Please return to the payment page.";
+
+  paymentStatus.textContent =
+    "NOT VERIFIED";
+
+  errorArea.style.display =
+    "block";
 
 }
 
 
 /*
-  Verify payment
+  Reference exists
 */
 
-async function verifyPayment() {
+else {
 
   try {
 
@@ -403,11 +269,13 @@ async function verifyPayment() {
 
 
     /*
-      Call the deployed
-      verify-payment Edge Function
+      Call Edge Function
     */
 
-    const result =
+    const {
+      data,
+      error
+    } =
       await supabase.functions.invoke(
         "verify-payment",
         {
@@ -423,41 +291,27 @@ async function verifyPayment() {
       );
 
 
-    const data =
-      result.data;
-
-    const error =
-      result.error;
-
-
     console.log(
-      "VERIFY PAYMENT DATA:",
+      "VERIFICATION DATA:",
       data
     );
 
+
     console.log(
-      "VERIFY PAYMENT ERROR:",
+      "VERIFICATION ERROR:",
       error
     );
 
-
-    /*
-      Edge Function error
-    */
 
     if (error) {
 
       throw new Error(
         error.message ||
-        "Unable to contact the payment verification service."
+        "Verification service failed."
       );
 
     }
 
-
-    /*
-      Verification failed
-    */
 
     if (
       !data ||
@@ -466,37 +320,25 @@ async function verifyPayment() {
 
       throw new Error(
         data?.message ||
-        "Paystack could not verify this payment."
+        "Payment could not be verified."
       );
 
     }
 
 
     /*
-      PAYMENT VERIFIED
+      SUCCESS
     */
 
-    paymentStatusElement.textContent =
+    paymentStatus.textContent =
       "PAID";
 
-    paymentStatusElement.style.color =
+    paymentStatus.style.color =
       "#16824d";
-
-
-    statusIcon.textContent =
-      "✓";
-
-    statusIcon.classList.remove(
-      "error"
-    );
 
 
     statusTitle.textContent =
       "Payment Verified Successfully";
-
-    statusTitle.classList.remove(
-      "error"
-    );
 
 
     statusDescription.textContent =
@@ -507,65 +349,34 @@ async function verifyPayment() {
       "#16824d";
 
     statusMessage.textContent =
-      "Your payment has been recorded successfully.";
+      "Payment status: PAID";
 
 
-    buttonArea.style.display =
+    successArea.style.display =
       "block";
-
-
-    /*
-      Clear temporary payment
-      information only after
-      successful verification.
-    */
-
-    sessionStorage.removeItem(
-      "pendingPaymentReference"
-    );
-
-    sessionStorage.removeItem(
-      "pendingPaymentType"
-    );
 
 
   } catch (error) {
 
     console.error(
-      "PAYMENT VERIFICATION ERROR:",
+      "VERIFICATION ERROR:",
       error
     );
 
 
-    /*
-      PAYMENT VERIFICATION FAILED
-    */
-
-    paymentStatusElement.textContent =
+    paymentStatus.textContent =
       "NOT VERIFIED";
 
-    paymentStatusElement.style.color =
+    paymentStatus.style.color =
       "#c62828";
-
-
-    statusIcon.textContent =
-      "!";
-
-    statusIcon.classList.add(
-      "error"
-    );
 
 
     statusTitle.textContent =
       "Payment Verification Failed";
 
-    statusTitle.classList.add(
-      "error"
-    );
-
 
     statusDescription.textContent =
-      "Your payment may have been completed, but NEDR could not verify it automatically.";
+      "We could not verify the Paystack transaction.";
 
 
     statusMessage.style.color =
@@ -573,62 +384,13 @@ async function verifyPayment() {
 
     statusMessage.textContent =
       error.message ||
-      "Please return to the payment page and try again.";
+      "Verification failed.";
 
 
-    buttonArea.style.display =
+    errorArea.style.display =
       "block";
 
   }
-
-}
-
-
-/*
-  Error display
-*/
-
-function showError(
-  title,
-  message
-) {
-
-  paymentStatusElement.textContent =
-    "ERROR";
-
-  paymentStatusElement.style.color =
-    "#c62828";
-
-
-  statusIcon.textContent =
-    "!";
-
-  statusIcon.classList.add(
-    "error"
-  );
-
-
-  statusTitle.textContent =
-    title;
-
-  statusTitle.classList.add(
-    "error"
-  );
-
-
-  statusDescription.textContent =
-    message;
-
-
-  statusMessage.style.color =
-    "#c62828";
-
-  statusMessage.textContent =
-    "No payment verification was completed.";
-
-
-  buttonArea.style.display =
-    "block";
 
 }
 
