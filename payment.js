@@ -196,20 +196,23 @@ payButton.addEventListener(
           .from("payments")
           .insert({
 
-            user_id:
-              user.id,
+          user_id:
+  user.id,
 
-            payment_type:
-              paymentType,
+payment_type:
+  paymentType,
 
-            amount:
-              amount,
+amount:
+  amount,
 
-            status:
-              "pending",
+status:
+  "pending",
 
-            reference:
-              reference
+gateway:
+  "paystack",
+
+reference:
+  reference
 
           });
 
