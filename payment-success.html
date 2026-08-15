@@ -186,10 +186,6 @@ import {
 } from "./supabase.js";
 
 
-/*
-  Require logged-in user
-*/
-
 const user =
   await requireUser();
 
@@ -202,10 +198,6 @@ if (!user) {
 
 }
 
-
-/*
-  Page elements
-*/
 
 const statusIcon =
   document.getElementById(
@@ -238,15 +230,11 @@ const buttonArea =
   );
 
 
-/*
-  Get saved transaction
-  information
-*/
-
 const reference =
   sessionStorage.getItem(
     "pendingPaymentReference"
   );
+
 
 const paymentType =
   sessionStorage.getItem(
@@ -256,16 +244,19 @@ const paymentType =
 
 if (!reference) {
 
-  statusIcon.classList.add(
-    "failed"
-  );
+  statusIcon.textContent =
+    "!";
 
-  statusTitle.classList.add(
+  statusIcon.classList.add(
     "failed"
   );
 
   statusTitle.textContent =
     "Payment Reference Missing";
+
+  statusTitle.classList.add(
+    "failed"
+  );
 
   statusDescription.textContent =
     "We could not find the payment reference required for verification.";
@@ -276,22 +267,11 @@ if (!reference) {
   buttonArea.style.display =
     "block";
 
-  throw new Error(
-    "Payment reference missing."
-  );
+} else {
 
-}
+  paymentReference.textContent =
+    reference;
 
-
-paymentReference.textContent =
-  reference;
-
-
-/*
-  Verify payment
-*/
-
-async function verifyPayment() {
 
   try {
 
@@ -300,7 +280,9 @@ async function verifyPayment() {
 
 
     /*
-      Call Supabase Edge Function
+      IMPORTANT:
+      Your actual Supabase Edge Function
+      is named smooth-api.
     */
 
     const {
@@ -308,37 +290,40 @@ async function verifyPayment() {
       error
     } =
       await supabase.functions.invoke(
-        "verify-payment",
+        "smooth-api",
         {
           body: {
 
             reference:
-              reference
+              reference,
+
+            payment_type:
+              paymentType
 
           }
         }
       );
 
 
+    console.log(
+      "VERIFICATION RESULT:",
+      data
+    );
+
+
     if (error) {
 
       console.error(
-        "FUNCTION ERROR:",
+        "EDGE FUNCTION ERROR:",
         error
       );
 
       throw new Error(
         error.message ||
-        "Payment verification failed."
+        "Unable to contact payment verification service."
       );
 
     }
-
-
-    console.log(
-      "VERIFICATION RESULT:",
-      data
-    );
 
 
     if (
@@ -355,7 +340,7 @@ async function verifyPayment() {
 
 
     /*
-      Payment verified
+      SUCCESS
     */
 
     statusIcon.textContent =
@@ -386,9 +371,7 @@ async function verifyPayment() {
 
 
     /*
-      Remove temporary payment
-      information after successful
-      verification.
+      Clear temporary data
     */
 
     sessionStorage.removeItem(
@@ -423,7 +406,7 @@ async function verifyPayment() {
       "Payment Verification Failed";
 
     statusDescription.textContent =
-      "Your payment could not be verified automatically.";
+      "Your payment was completed, but we could not verify it automatically.";
 
     statusMessage.style.color =
       "#c62828";
@@ -438,13 +421,6 @@ async function verifyPayment() {
   }
 
 }
-
-
-/*
-  Start verification
-*/
-
-verifyPayment();
 
 </script>
 
