@@ -4,10 +4,16 @@ import {
 } from "./supabase.js";
 
 
+/*
+  Require logged-in user
+*/
+
 const user = await requireUser();
 
 if (!user) {
-  throw new Error("Authentication required.");
+  throw new Error(
+    "Authentication required."
+  );
 }
 
 
@@ -20,7 +26,7 @@ const PAYSTACK_PUBLIC_KEY =
 
 
 /*
-  Payment type
+  Read payment type
 */
 
 const params =
@@ -58,11 +64,13 @@ const payButton =
 
 
 /*
-  Determine payment
+  Determine payment type
 */
 
 let amount;
+
 let paymentType;
+
 
 if (type === "project") {
 
@@ -97,12 +105,26 @@ paymentAmount.textContent =
 
 
 /*
-  Pay button
+  Check Paystack
+*/
+
+function isPaystackReady() {
+
+  return (
+    typeof window.PaystackPop !==
+    "undefined"
+  );
+
+}
+
+
+/*
+  Start payment
 */
 
 payButton.addEventListener(
   "click",
-  async () => {
+  async function () {
 
     payButton.disabled =
       true;
@@ -116,25 +138,26 @@ payButton.addEventListener(
 
     try {
 
+
       /*
         Make sure Paystack
-        library is available
+        has loaded
       */
 
       if (
-        typeof PaystackPop ===
-        "undefined"
+        !isPaystackReady()
       ) {
 
         throw new Error(
-          "Paystack could not be loaded. Please refresh the page and try again."
+          "Paystack is still loading. Please refresh the page and try again."
         );
 
       }
 
 
       /*
-        Generate unique reference
+        Generate unique
+        payment reference
       */
 
       const reference =
@@ -143,17 +166,21 @@ payButton.addEventListener(
         "-" +
         crypto
           .randomUUID()
-          .substring(0, 8)
+          .substring(
+            0,
+            8
+          )
           .toUpperCase();
 
 
       /*
         Create pending payment
-        record in Supabase
+        in Supabase
       */
 
       const {
-        error: insertError
+        error:
+          paymentError
       } =
         await supabase
           .from("payments")
@@ -180,15 +207,15 @@ payButton.addEventListener(
           });
 
 
-      if (insertError) {
+      if (paymentError) {
 
         console.error(
-          "PAYMENT RECORD ERROR:",
-          insertError
+          "PAYMENT DATABASE ERROR:",
+          paymentError
         );
 
         throw new Error(
-          insertError.message
+          paymentError.message
         );
 
       }
@@ -198,8 +225,15 @@ payButton.addEventListener(
         Open Paystack
       */
 
+      paymentMessage.style.color =
+        "#6b7280";
+
+      paymentMessage.textContent =
+        "Opening secure Paystack checkout...";
+
+
       const popup =
-        new PaystackPop();
+        new window.PaystackPop();
 
 
       popup.newTransaction({
@@ -240,27 +274,28 @@ payButton.addEventListener(
 
 
         /*
-          Payment completed
+          Paystack success callback
         */
 
         onSuccess:
-          function(transaction) {
+          function (transaction) {
 
             console.log(
-              "Paystack transaction:",
+              "PAYSTACK TRANSACTION:",
               transaction
             );
 
 
             /*
-              Store reference temporarily.
-              This is NOT payment verification.
+              Save reference temporarily.
+              This does NOT verify payment.
             */
 
             sessionStorage.setItem(
               "pendingPaymentReference",
               transaction.reference
             );
+
 
             sessionStorage.setItem(
               "pendingPaymentType",
@@ -276,13 +311,13 @@ payButton.addEventListener(
 
 
             /*
-              Temporary success page.
+              Temporary redirect.
               Secure verification will be
               connected next.
             */
 
             setTimeout(
-              () => {
+              function () {
 
                 window.location.href =
                   "payment-success.html";
@@ -299,7 +334,7 @@ payButton.addEventListener(
         */
 
         onCancel:
-          function() {
+          function () {
 
             payButton.disabled =
               false;
