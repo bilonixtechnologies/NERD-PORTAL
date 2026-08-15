@@ -4,26 +4,37 @@ import {
 } from "./supabase.js";
 
 
-const user =
-  await requireUser();
-
+const user = await requireUser();
 
 if (!user) {
-  throw new Error(
-    "Authentication required."
-  );
+  throw new Error("Authentication required.");
 }
 
+
+/*
+  Paystack TEST public key
+*/
+
+const PAYSTACK_PUBLIC_KEY =
+  "pk_test_940a80df4e25871e462eaa19a35b8ce45b947b7e";
+
+
+/*
+  URL payment type
+*/
 
 const params =
   new URLSearchParams(
     window.location.search
   );
 
-
 const type =
   params.get("type");
 
+
+/*
+  Page elements
+*/
 
 const paymentTitle =
   document.getElementById(
@@ -46,12 +57,20 @@ const payButton =
   );
 
 
+/*
+  Payment amount
+*/
+
 let amount;
 
+let paymentType;
 
 if (type === "project") {
 
   amount = 4850;
+
+  paymentType =
+    "project_upload";
 
   paymentTitle.textContent =
     "Project Upload Payment";
@@ -60,6 +79,9 @@ if (type === "project") {
 
   amount = 2500;
 
+  paymentType =
+    "registration";
+
   paymentTitle.textContent =
     "Registration Payment";
 
@@ -67,50 +89,280 @@ if (type === "project") {
 
 
 paymentAmount.textContent =
-  "₦" + amount.toLocaleString();
+  "₦" +
+  amount.toLocaleString();
 
+
+/*
+  Load Paystack
+*/
+
+function loadPaystack() {
+
+  return new Promise(
+    (resolve, reject) => {
+
+      if (window.PaystackPop) {
+
+        resolve();
+
+        return;
+      }
+
+
+      const script =
+        document.createElement(
+          "script"
+        );
+
+      script.src =
+        "https://js.paystack.co/v2/inline.js";
+
+
+      script.onload =
+        () => resolve();
+
+
+      script.onerror =
+        () =>
+          reject(
+            new Error(
+              "Unable to load Paystack."
+            )
+          );
+
+
+      document.head.appendChild(
+        script
+      );
+
+    }
+  );
+
+}
+
+
+/*
+  Start payment
+*/
 
 payButton.addEventListener(
   "click",
   async () => {
 
+    payButton.disabled =
+      true;
+
+
+    paymentMessage.style.color =
+      "#6b7280";
+
     paymentMessage.textContent =
-      "Creating payment transaction...";
+      "Preparing payment...";
 
 
-    const {
-      error
-    } =
-      await supabase
-        .from("payments")
-        .insert({
+    try {
 
-          user_id: user.id,
+      /*
+        Load Paystack
+      */
+
+      await loadPaystack();
+
+
+      /*
+        Create unique reference
+      */
+
+      const reference =
+        "NEDR-" +
+        Date.now() +
+        "-" +
+        crypto
+          .randomUUID()
+          .substring(0, 8)
+          .toUpperCase();
+
+
+      /*
+        Create pending payment
+        record first
+      */
+
+      const {
+        error: insertError
+      } =
+        await supabase
+          .from("payments")
+          .insert({
+
+            user_id:
+              user.id,
+
+            payment_type:
+              paymentType,
+
+            amount:
+              amount,
+
+            status:
+              "pending",
+
+            reference:
+              reference
+
+          });
+
+
+      if (insertError) {
+
+        console.error(
+          "PAYMENT RECORD ERROR:",
+          insertError
+        );
+
+        throw new Error(
+          insertError.message
+        );
+
+      }
+
+
+      /*
+        Open Paystack
+      */
+
+      const popup =
+        new PaystackPop();
+
+
+      popup.newTransaction({
+
+        key:
+          PAYSTACK_PUBLIC_KEY,
+
+        email:
+          user.email,
+
+        amount:
+          amount * 100,
+
+        currency:
+          "NGN",
+
+        reference:
+          reference,
+
+
+        metadata: {
+
+          user_id:
+            user.id,
 
           payment_type:
-            type === "project"
-              ? "project_upload"
-              : "registration",
+            paymentType,
 
-          amount: amount,
+          description:
+            paymentType ===
+            "registration"
 
-          status: "pending"
+              ? "NEDR Student Registration Fee"
 
-        });
+              : "NEDR Project Upload Fee"
+
+        },
 
 
-    if (error) {
+        onSuccess:
+          function(transaction) {
 
-      paymentMessage.textContent =
-        error.message;
+            console.log(
+              "Paystack transaction:",
+              transaction
+            );
 
-      return;
+
+            /*
+              IMPORTANT:
+              The browser callback is NOT
+              considered proof of payment.
+            */
+
+            sessionStorage.setItem(
+              "pendingPaymentReference",
+              transaction.reference
+            );
+
+
+            sessionStorage.setItem(
+              "pendingPaymentType",
+              paymentType
+            );
+
+
+            paymentMessage.style.color =
+              "#16824d";
+
+            paymentMessage.textContent =
+              "Payment received. Verifying payment...";
+
+
+            /*
+              Temporary destination.
+              We will replace this with
+              secure server-side verification.
+            */
+
+            setTimeout(
+              () => {
+
+                window.location.href =
+                  "payment-success.html";
+
+              },
+              1000
+            );
+
+          },
+
+
+        onCancel:
+          function() {
+
+            payButton.disabled =
+              false;
+
+            paymentMessage.style.color =
+              "#c62828";
+
+            paymentMessage.textContent =
+              "Payment was cancelled.";
+
+          }
+
+      });
 
     }
 
 
-    paymentMessage.textContent =
-      "Payment transaction created. Connect your live payment gateway and server-side verification before accepting real payments.";
+    catch (error) {
+
+      console.error(
+        "PAYMENT ERROR:",
+        error
+      );
+
+      payButton.disabled =
+        false;
+
+      paymentMessage.style.color =
+        "#c62828";
+
+      paymentMessage.textContent =
+        error.message ||
+        "Unable to start payment.";
+
+    }
 
   }
 );
