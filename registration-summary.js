@@ -27,14 +27,24 @@ const printButton =
   document.getElementById("printButton");
 
 
+/*
+  Display value
+*/
+
 function displayValue(id, value) {
 
   const element =
     document.getElementById(id);
 
   if (element) {
+
     element.textContent =
-      value || "—";
+      value !== null &&
+      value !== undefined &&
+      String(value).trim() !== ""
+        ? value
+        : "—";
+
   }
 
 }
@@ -54,30 +64,50 @@ const {
   .maybeSingle();
 
 
+/*
+  Database error
+*/
+
 if (error) {
 
-  loading.style.display = "none";
+  console.error(
+    "PROFILE LOAD ERROR:",
+    error
+  );
 
-  errorBox.style.display = "block";
+  loading.style.display =
+    "none";
+
+  errorBox.style.display =
+    "block";
 
   errorBox.textContent =
     "Could not load your profile: " +
     error.message;
 
   throw error;
+
 }
 
 
+/*
+  Profile not found
+*/
+
 if (!profile) {
 
-  loading.style.display = "none";
+  loading.style.display =
+    "none";
 
-  errorBox.style.display = "block";
+  errorBox.style.display =
+    "block";
 
   errorBox.textContent =
     "Your profile was not found. Please return to the Profile page and complete your information.";
 
-  throw new Error("Profile not found.");
+  throw new Error(
+    "Profile not found."
+  );
 
 }
 
@@ -98,7 +128,7 @@ const fullName = [
 
 
 /*
-  Personal information
+  PERSONAL INFORMATION
 */
 
 displayValue(
@@ -148,7 +178,27 @@ displayValue(
 
 
 /*
-  Academic information
+  CONTACT INFORMATION
+*/
+
+displayValue(
+  "address",
+  profile.address
+);
+
+displayValue(
+  "contactState",
+  profile.contact_state
+);
+
+displayValue(
+  "contactLga",
+  profile.contact_lga
+);
+
+
+/*
+  ACADEMIC INFORMATION
 */
 
 displayValue(
@@ -182,8 +232,43 @@ displayValue(
 );
 
 displayValue(
+  "level",
+  profile.level
+);
+
+displayValue(
   "session",
   profile.session
+);
+
+
+/*
+  PROJECT INFORMATION
+*/
+
+displayValue(
+  "projectTitle",
+  profile.project_title
+);
+
+displayValue(
+  "supervisorName",
+  profile.supervisor_name
+);
+
+displayValue(
+  "supervisorEmail",
+  profile.supervisor_email
+);
+
+displayValue(
+  "hodName",
+  profile.hod_name
+);
+
+displayValue(
+  "hodEmail",
+  profile.hod_email
 );
 
 
@@ -203,7 +288,7 @@ paymentAction.style.display =
 
 
 /*
-  Print
+  Print summary
 */
 
 printButton.addEventListener(
