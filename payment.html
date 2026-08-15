@@ -17,22 +17,78 @@
   href="style.css"
 >
 
+<style>
+
+.payment-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 20px;
+}
+
+.payment-card {
+  width: 100%;
+  max-width: 520px;
+}
+
+.payment-amount {
+  margin: 25px 0;
+  padding: 22px;
+  background: #f7faf8;
+  border: 1px solid #dfe4e8;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.payment-amount span {
+  display: block;
+  color: #6b7280;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.payment-amount strong {
+  display: block;
+  color: #006b3f;
+  font-size: 32px;
+}
+
+.payment-description {
+  color: #6b7280;
+  line-height: 1.6;
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.payment-message {
+  min-height: 24px;
+  margin-top: 15px;
+  text-align: center;
+  font-size: 14px;
+}
+
+</style>
+
 </head>
 
 
 <body class="auth-page">
 
 
-<div class="auth-container">
+<div class="payment-page">
 
-  <div class="auth-card">
+  <div class="auth-card payment-card">
 
     <div class="eyebrow">
-      PAYMENT
+      NEDR PAYMENT
     </div>
 
 
-    <h1 id="paymentTitle">
+    <h1
+      id="paymentTitle"
+      style="text-align:center;"
+    >
       Registration Payment
     </h1>
 
@@ -50,10 +106,13 @@
     </div>
 
 
-    <p>
+    <p class="payment-description">
+
       Your payment must be successfully
-      verified before the next stage
-      becomes available.
+      verified before the next stage of
+      your NEDR registration becomes
+      available.
+
     </p>
 
 
@@ -68,26 +127,33 @@
 
     <p
       id="paymentMessage"
-      class="form-message"
+      class="payment-message"
+      aria-live="polite"
     ></p>
+
 
   </div>
 
 </div>
 
 
-<!-- Paystack InlineJS -->
+<!--
+  Paystack's official InlineJS library.
+  This loads before payment.js.
+-->
 
 <script
   src="https://js.paystack.co/v2/inline.js"
 ></script>
 
 
-<!-- NEDR Payment Script -->
+<!--
+  NEDR payment application.
+-->
 
 <script
   type="module"
-  src="payment.js"
+  src="./payment.js"
 ></script>
 
 
