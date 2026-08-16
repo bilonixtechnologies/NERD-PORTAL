@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>NEDR - Project Upload</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f7f9;
+      color: #222;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #006b3f;
+      color: #fff;
+      padding: 18px 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 23px;
+      margin-bottom: 5px;
+    }
+
+    header p {
+      font-size: 13px;
+      opacity: .9;
+    }
+
+    .container {
+      width: 94%;
+      max-width: 700px;
+      margin: 30px auto;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 4px 18px rgba(0,0,0,.08);
+    }
+
+    h2 {
+      color: #006b3f;
+      margin-bottom: 20px;
+      font-size: 22px;
+    }
+
+    .fee {
+      background: #f1f8f4;
+      border-left: 5px solid #006b3f;
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+    }
+
+    .fee strong {
+      display: block;
+      font-size: 23px;
+      margin-top: 5px;
+      color: #006b3f;
+    }
+
+    label {
+      display: block;
+      margin-top: 16px;
+      margin-bottom: 7px;
+      font-weight: bold;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #ccc;
+      border-radius: 7px;
+      font-size: 15px;
+      outline: none;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #006b3f;
+    }
+
+    textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    .file-box {
+      border: 2px dashed #bbb;
+      padding: 18px;
+      text-align: center;
+      border-radius: 8px;
+      margin-top: 8px;
+      background: #fafafa;
+    }
+
+    .file-box input {
+      border: none;
+      padding: 5px;
+      background: transparent;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 18px;
+      padding: 14px;
+      border: none;
+      border-radius: 7px;
+      background: #006b3f;
+      color: #fff;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #005331;
+    }
+
+    button:disabled {
+      background: #999;
+      cursor: not-allowed;
+    }
+
+    .message {
+      display: none;
+      padding: 13px;
+      border-radius: 7px;
+      margin-bottom: 18px;
+      font-size: 14px;
+    }
+
+    .success {
+      display: block;
+      background: #e7f7ed;
+      color: #176b35;
+    }
+
+    .error {
+      display: block;
+      background: #fdeaea;
+      color: #a11;
+    }
+
+    .info {
+      display: block;
+      background: #eef3f7;
+      color: #333;
+    }
+
+    .payment-status {
+      padding: 13px;
+      border-radius: 7px;
+      margin-bottom: 18px;
+      font-size: 14px;
+      background: #fff8e1;
+      color: #795500;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .back {
+      display: inline-block;
+      margin-top: 18px;
+      color: #006b3f;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: #777;
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>NEDR</h1>
+  <p>Project Submission Portal</p>
+</header>
+
+<div class="container">
+
+  <div class="card">
+
+    <h2>Project Upload</h2>
+
+    <div class="fee">
+      Project Upload Fee
+      <strong>₦4,850</strong>
+    </div>
+
+    <div id="message" class="message"></div>
+
+    <div id="paymentStatus" class="payment-status">
+      Checking project payment...
+    </div>
+
+    <!-- PAYMENT SECTION -->
+
+    <div id="paymentSection">
+
+      <button
+        type="button"
+        id="payButton"
+      >
+        Pay ₦4,850 for Project Upload
+      </button>
+
+    </div>
+
+    <!-- PROJECT FORM -->
+
+    <form
+      id="projectForm"
+      class="hidden"
+    >
+
+      <label for="submissionType">
+        Submission Type
+      </label>
+
+      <select
+        id="submissionType"
+        required
+      >
+        <option value="">
+          Select submission type
+        </option>
+
+        <option value="Project">
+          Project
+        </option>
+
+        <option value="Correction">
+          Correction
+        </option>
+
+        <option value="Final Submission">
+          Final Submission
+        </option>
+      </select>
+
+
+      <label for="projectTitle">
+        Project Title
+      </label>
+
+      <textarea
+        id="projectTitle"
+        placeholder="Enter your project title"
+        required
+      ></textarea>
+
+
+      <label for="supervisor">
+        Supervisor
+      </label>
+
+      <input
+        type="text"
+        id="supervisor"
+        placeholder="Enter supervisor's name"
+        required
+      >
+
+
+      <label for="department">
+        Department
+      </label>
+
+      <input
+        type="text"
+        id="department"
+        placeholder="Enter department"
+        required
+      >
+
+
+      <label for="projectFile">
+        Upload Project File
+      </label>
+
+      <div class="file-box">
+
+        <input
+          type="file"
+          id="projectFile"
+          accept=".pdf,.doc,.docx"
+          required
+        >
+
+        <p style="font-size:12px;color:#777;margin-top:8px;">
+          Accepted formats: PDF, DOC, DOCX
+        </p>
+
+      </div>
+
+
+      <button
+        type="submit"
+        id="uploadBtn"
+      >
+        Upload Project
+      </button>
+
+    </form>
+
+
+    <a
+      href="dashboard.html"
+      class="back"
+    >
+      ← Back to Dashboard
+    </a>
+
+  </div>
+
+</div>
+
+<footer>
+  © NEDR. All rights reserved.
+</footer>
+
+
+<script>
+
+const SUPABASE_URL =
+  "https://sqmieonrtwhehrbdxwmd.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+  "sb_publishable_jABLiODsCqH2AzMmBNIpbQ_sqRMJ2h7";
+
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
+
+const PROJECT_FEE =
+  4850;
+
+const PROJECT_BUCKET =
+  "projects";
+
+
+const INITIALIZE_FUNCTION =
+  "initialize-project-payment";
+
+const VERIFY_FUNCTION =
+  "verify-payment";
+
+
+const messageBox =
+  document.getElementById(
+    "message"
+  );
+
+const paymentStatus =
+  document.getElementById(
+    "paymentStatus"
+  );
+
+const paymentSection =
+  document.getElementById(
+    "paymentSection"
+  );
+
+const payButton =
+  document.getElementById(
+    "payButton"
+  );
+
+const projectForm =
+  document.getElementById(
+    "projectForm"
+  );
+
+const uploadBtn =
+  document.getElementById(
+    "uploadBtn"
+  );
+
+
+function showMessage(
+  text,
+  type
+) {
+
+  messageBox.textContent =
+    text;
+
+  messageBox.className =
+    "message " + type;
+}
+
+
+async function getCurrentUser() {
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .auth
+      .getUser();
+
+  if (error) {
+    throw error;
+  }
+
+  if (!data.user) {
+
+    throw new Error(
+      "You are not logged in. Please log in first."
+    );
+  }
+
+  return data.user;
+}
+
+
+/*
+  Check whether this user already has
+  a successful PROJECT payment.
+
+  The required amount is ₦4,850.
+*/
+
+async function checkProjectPayment(
+  user
+) {
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("payments")
+      .select("*")
+      .eq(
+        "user_id",
+        user.id
+      )
+      .eq(
+        "payment_type",
+        "project"
+      )
+      .eq(
+        "status",
+        "paid"
+      )
+      .order(
+        "created_at",
+        {
+          ascending: false
+        }
+      )
+      .limit(10);
+
+
+  if (error) {
+
+    console.error(
+      "Payment lookup error:",
+      error
+    );
+
+    return false;
+  }
+
+
+  if (!data || data.length === 0) {
+    return false;
+  }
+
+
+  const validPayment =
+    data.find(
+      payment =>
+        Number(
+          payment.amount
+        ) === PROJECT_FEE
+    );
+
+
+  return !!validPayment;
+}
+
+
+/*
+  Show the appropriate page state.
+*/
+
+async function initializePage() {
+
+  try {
+
+    const user =
+      await getCurrentUser();
+
+
+    const paid =
+      await checkProjectPayment(
+        user
+      );
+
+
+    if (paid) {
+
+      paymentStatus.textContent =
+        "✓ Your ₦4,850 project payment has been verified.";
+
+      paymentStatus.style.background =
+        "#e7f7ed";
+
+      paymentStatus.style.color =
+        "#176b35";
+
+      paymentSection.classList.add(
+        "hidden"
+      );
+
+      projectForm.classList.remove(
+        "hidden"
+      );
+
+      return;
+    }
+
+
+    paymentStatus.textContent =
+      "Project payment required. Please pay ₦4,850 before uploading your project.";
+
+    paymentStatus.style.background =
+      "#fff8e1";
+
+    paymentStatus.style.color =
+      "#795500";
+
+    paymentSection.classList.remove(
+      "hidden"
+    );
+
+    projectForm.classList.add(
+      "hidden"
+    );
+
+  }
+
+  catch (error) {
+
+    console.error(error);
+
+    showMessage(
+      error.message,
+      "error"
+    );
+
+    payButton.disabled =
+      true;
+  }
+}
+
+
+/*
+  Start ₦4,850 project payment.
+*/
+
+async function startProjectPayment() {
+
+  payButton.disabled =
+    true;
+
+  payButton.textContent =
+    "Preparing payment...";
+
+  showMessage(
+    "Preparing your ₦4,850 project payment...",
+    "info"
+  );
+
+
+  try {
+
+    const {
+      data: sessionData,
+      error: sessionError
+    } =
+      await supabaseClient
+        .auth
+        .getSession();
+
+
+    if (
+      sessionError ||
+      !sessionData.session
+    ) {
+
+      throw new Error(
+        "Your login session has expired. Please log in again."
+      );
+    }
+
+
+    const accessToken =
+      sessionData.session.access_token;
+
+
+    const response =
+      await fetch(
+        `${SUPABASE_URL}/functions/v1/${INITIALIZE_FUNCTION}`,
+        {
+          method: "POST",
+
+          headers: {
+
+            "Authorization":
+              `Bearer ${accessToken}`,
+
+            "apikey":
+              SUPABASE_PUBLISHABLE_KEY,
+
+            "Content-Type":
+              "application/json"
+          },
+
+          body:
+            JSON.stringify({
+              payment_type:
+                "project",
+
+              amount:
+                PROJECT_FEE
+            })
+        }
+      );
+
+
+    const result =
+      await response.json();
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        result.error ||
+        result.message ||
+        "Unable to initialize payment."
+      );
+    }
+
+
+    if (
+      !result.authorization_url
+    ) {
+
+      throw new Error(
+        "Paystack authorization URL was not returned."
+      );
+    }
+
+
+    showMessage(
+      "Redirecting to Paystack...",
+      "info"
+    );
+
+
+    /*
+      Store reference temporarily so
+      it can be verified after payment.
+    */
+
+    if (result.reference) {
+
+      sessionStorage.setItem(
+        "project_payment_reference",
+        result.reference
+      );
+    }
+
+
+    window.location.href =
+      result.authorization_url;
+
+  }
+
+  catch (error) {
+
+    console.error(error);
+
+    showMessage(
+      error.message ||
+      "Unable to start payment.",
+      "error"
+    );
+
+    payButton.disabled =
+      false;
+
+    payButton.textContent =
+      "Pay ₦4,850 for Project Upload";
+  }
+}
+
+
+/*
+  Verify payment after Paystack returns
+  the user to this page.
+*/
+
+async function verifyReturnedPayment() {
+
+  const params =
+    new URLSearchParams(
+      window.location.search
+    );
+
+
+  const reference =
+    params.get(
+      "reference"
+    ) ||
+    params.get(
+      "trxref"
+    ) ||
+    sessionStorage.getItem(
+      "project_payment_reference"
+    );
+
+
+  if (!reference) {
+    return false;
+  }
+
+
+  showMessage(
+    "Verifying your ₦4,850 project payment...",
+    "info"
+  );
+
+
+  try {
+
+    const {
+      data: sessionData,
+      error: sessionError
+    } =
+      await supabaseClient
+        .auth
+        .getSession();
+
+
+    if (
+      sessionError ||
+      !sessionData.session
+    ) {
+
+      throw new Error(
+        "Your login session has expired."
+      );
+    }
+
+
+    const accessToken =
+      sessionData.session.access_token;
+
+
+    const response =
+      await fetch(
+        `${SUPABASE_URL}/functions/v1/${VERIFY_FUNCTION}`,
+        {
+          method: "POST",
+
+          headers: {
+
+            "Authorization":
+              `Bearer ${accessToken}`,
+
+            "apikey":
+              SUPABASE_PUBLISHABLE_KEY,
+
+            "Content-Type":
+              "application/json"
+          },
+
+          body:
+            JSON.stringify({
+              reference:
+                reference,
+
+              payment_type:
+                "project"
+            })
+        }
+      );
+
+
+    const result =
+      await response.json();
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        result.error ||
+        result.message ||
+        "Payment verification failed."
+      );
+    }
+
+
+    /*
+      Verification function should return
+      success / status information.
+    */
+
+    if (
+      result.success === true ||
+      result.status === "paid" ||
+      result.payment_status === "paid"
+    ) {
+
+      sessionStorage.removeItem(
+        "project_payment_reference"
+      );
+
+
+      window.history.replaceState(
+        {},
+        document.title,
+        window.location.pathname
+      );
+
+
+      paymentStatus.textContent =
+        "✓ ₦4,850 project payment verified.";
+
+      paymentStatus.style.background =
+        "#e7f7ed";
+
+      paymentStatus.style.color =
+        "#176b35";
+
+
+      paymentSection.classList.add(
+        "hidden"
+      );
+
+      projectForm.classList.remove(
+        "hidden"
+      );
+
+
+      showMessage(
+        "Payment verified successfully. You can now upload your project.",
+        "success"
+      );
+
+
+      return true;
+    }
+
+
+    throw new Error(
+      result.message ||
+      "Payment has not been verified yet."
+    );
+
+  }
+
+  catch (error) {
+
+    console.error(error);
+
+    showMessage(
+      error.message,
+      "error"
+    );
+
+    return false;
+  }
+}
+
+
+/*
+  Upload project to Supabase Storage.
+*/
+
+async function uploadProject(
+  event
+) {
+
+  event.preventDefault();
+
+
+  uploadBtn.disabled =
+    true;
+
+  uploadBtn.textContent =
+    "Checking payment...";
+
+
+  try {
+
+    const user =
+      await getCurrentUser();
+
+
+    const paid =
+      await checkProjectPayment(
+        user
+      );
+
+
+    if (!paid) {
+
+      throw new Error(
+        "Your ₦4,850 project payment has not been verified."
+      );
+    }
+
+
+    const file =
+      document.getElementById(
+        "projectFile"
+      ).files[0];
+
+
+    if (!file) {
+
+      throw new Error(
+        "Please select your project file."
+      );
+    }
+
+
+    const submissionType =
+      document.getElementById(
+        "submissionType"
+      ).value;
+
+
+    const projectTitle =
+      document.getElementById(
+        "projectTitle"
+      ).value.trim();
+
+
+    const supervisor =
+      document.getElementById(
+        "supervisor"
+      ).value.trim();
+
+
+    const department =
+      document.getElementById(
+        "department"
+      ).value.trim();
+
+
+    const safeFileName =
+      file.name.replace(
+        /[^a-zA-Z0-9._-]/g,
+        "_"
+      );
+
+
+    const filePath =
+      user.id +
+      "/" +
+      Date.now() +
+      "_" +
+      safeFileName;
+
+
+    uploadBtn.textContent =
+      "Uploading project...";
+
+
+    const {
+      error: uploadError
+    } =
+      await supabaseClient
+        .storage
+        .from(
+          PROJECT_BUCKET
+        )
+        .upload(
+          filePath,
+          file,
+          {
+            cacheControl:
+              "3600",
+
+            upsert:
+              false
+          }
+        );
+
+
+    if (uploadError) {
+
+      throw new Error(
+        uploadError.message
+      );
+    }
+
+
+    /*
+      Save project information.
+    */
+
+    const {
+      error: projectError
+    } =
+      await supabaseClient
+        .from("projects")
+        .insert({
+
+          user_id:
+            user.id,
+
+          submission_type:
+            submissionType,
+
+          project_title:
+            projectTitle,
+
+          supervisor:
+            supervisor,
+
+          department:
+            department,
+
+          file_path:
+            filePath,
+
+          file_name:
+            file.name,
+
+          payment_type:
+            "project",
+
+          payment_status:
+            "paid",
+
+          amount:
+            PROJECT_FEE
+        });
+
+
+    if (projectError) {
+
+      throw new Error(
+        "Project file uploaded, but project information could not be saved: " +
+        projectError.message
+      );
+    }
+
+
+    showMessage(
+      "Project uploaded successfully.",
+      "success"
+    );
+
+
+    projectForm.reset();
+
+
+    uploadBtn.disabled =
+      false;
+
+    uploadBtn.textContent =
+      "Upload Project";
+
+  }
+
+  catch (error) {
+
+    console.error(error);
+
+    showMessage(
+      error.message ||
+      "Project upload failed.",
+      "error"
+    );
+
+    uploadBtn.disabled =
+      false;
+
+    uploadBtn.textContent =
+      "Upload Project";
+  }
+}
+
+
+/*
+  Button events.
+*/
+
+payButton.addEventListener(
+  "click",
+  startProjectPayment
+);
+
+projectForm.addEventListener(
+  "submit",
+  uploadProject
+);
+
+
+/*
+  Start page.
+*/
+
+(async function () {
+
+  const returnedPayment =
+    await verifyReturnedPayment();
+
+  if (!returnedPayment) {
+    await initializePage();
+  }
+
+})();
+
+</script>
+
+</body>
+  </html>
