@@ -107,7 +107,18 @@
       style="display:none;"
     >
 
+      <p
+        style="
+          text-align:center;
+          color:#16824d;
+          margin-top:15px;
+        "
+      >
+        Redirecting you shortly...
+      </p>
+
       <a
+        id="continueButton"
         href="dashboard.html"
         class="primary-btn full-btn"
       >
@@ -210,6 +221,11 @@ const errorArea =
     "errorArea"
   );
 
+const continueButton =
+  document.getElementById(
+    "continueButton"
+  );
+
 
 /*
   Get payment type from URL
@@ -256,8 +272,11 @@ async function findPendingPayment() {
 
 
   /*
-    If payment type is known,
-    use it.
+    PROJECT PAYMENT
+
+    The initialize-project-payment
+    function saves payment_type as
+    "project".
   */
 
   if (
@@ -268,7 +287,7 @@ async function findPendingPayment() {
     query =
       query.eq(
         "payment_type",
-        "project_upload"
+        "project"
       );
 
   } else {
@@ -364,9 +383,9 @@ async function verifyPayment() {
 
     paymentTypeElement.textContent =
       payment.payment_type ===
-      "project_upload"
+      "project"
 
-        ? "Project Upload"
+        ? "Project Payment"
 
         : "Registration";
 
@@ -383,7 +402,7 @@ async function verifyPayment() {
 
 
     /*
-      Call deployed Edge Function
+      Call verify-payment Edge Function
     */
 
     const {
@@ -476,6 +495,50 @@ async function verifyPayment() {
 
     successArea.style.display =
       "block";
+
+
+    /*
+      Choose destination
+    */
+
+    let destination =
+      "dashboard.html";
+
+
+    /*
+      Project payment:
+      send user back to dashboard
+      after successful verification.
+    */
+
+    if (
+      requestedType ===
+      "project"
+    ) {
+
+      destination =
+        "dashboard.html";
+
+    }
+
+
+    continueButton.href =
+      destination;
+
+
+    /*
+      AUTOMATIC REDIRECT
+    */
+
+    setTimeout(
+      () => {
+
+        window.location.href =
+          destination;
+
+      },
+      2000
+    );
 
 
   } catch (error) {
